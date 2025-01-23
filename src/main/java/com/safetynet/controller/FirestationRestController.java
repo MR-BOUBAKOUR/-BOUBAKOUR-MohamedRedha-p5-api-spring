@@ -17,7 +17,5 @@ public class FirestationRestController {
     @GetMapping("/firestation")
     public List<Firestation> getFirestation() {
         return dataAccessService.findFirestations();
-
     }
-
 }
