@@ -1,9 +1,7 @@
 package com.safetynet.controller;
 
 import com.safetynet.model.Person;
-import com.safetynet.service.DataAccessService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.safetynet.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,30 +11,30 @@ import java.util.List;
 public class PersonRestController {
 
     @Autowired
-    private DataAccessService dataAccessService;
+    private PersonService personService;
 
     @GetMapping("/person")
     public List<Person> getAllPersons() {
-        return dataAccessService.findAllPersons();
+        return personService.findAllPersons();
     }
 
     @GetMapping("/person/{theFirstName}-{theLastName}")
     public Person getPerson(@PathVariable String theFirstName, @PathVariable String theLastName) {
-        return dataAccessService.findPersonByFirstNameAndLastName(theFirstName, theLastName);
+        return personService.findPersonByFirstNameAndLastName(theFirstName, theLastName);
     }
 
     @PostMapping("/person")
     public void addPerson(@RequestBody Person thePerson) {
-        dataAccessService.addPerson(thePerson);
+        personService.addPerson(thePerson);
     }
 
     @PutMapping("/person")
     public void updatePerson(@RequestBody Person thePerson) {
-        dataAccessService.updatePerson(thePerson);
+        personService.updatePerson(thePerson);
     }
 
     @DeleteMapping("/person/{theFirstName}-{theLastName}")
     public void deletePerson(@PathVariable String theFirstName, @PathVariable String theLastName) {
-        dataAccessService.deletePerson(theFirstName, theLastName);
+        personService.deletePerson(theFirstName, theLastName);
     }
 }
