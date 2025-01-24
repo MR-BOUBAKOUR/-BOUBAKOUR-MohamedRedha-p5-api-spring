@@ -33,12 +33,12 @@ public class DataAccessService {
 
     // Load the JSON file only once at the start of the application.
     // This ensures that the data is available in memory for all subsequent calls.
-    // The loaded data is sent to its respective "cache" variable (for performance issues)
     @PostConstruct
     public void init() {
         try {
             rootNode = mapper.readTree(new File(FILE_PATH));
 
+            // The loaded data is sent to its respective "cache" variable (for performance issues)
             personsCache = readData("persons", Person.class);
             firestationsCache = readData("firestations", Firestation.class);
             medicalRecordsCache = readData("medicalrecords", MedicalRecord.class);
@@ -94,19 +94,11 @@ public class DataAccessService {
         init();
     }
 
-    public List<Person> findPersons() {
+    // -------------------------- Persons --------------------------
+
+    public List<Person> findAllPersons() {
         logger.info("Finding the persons from the database");
         return personsCache;
-    }
-
-    public List<Firestation> findFirestations() {
-        logger.info("Finding the firestations from the database");
-        return firestationsCache;
-    }
-
-    public List<MedicalRecord> findMedicalRecords() {
-        logger.info("Finding the medical records from the database");
-        return medicalRecordsCache;
     }
 
     public Person findPersonByFirstNameAndLastName(String theFirstName, String theLastName) {
@@ -126,6 +118,7 @@ public class DataAccessService {
     }
 
     public void updatePerson(Person thePerson) {
+        boolean found = false;
         for (Person person : personsCache) {
             if (person.getFirstName().equals(thePerson.getFirstName()) &&
                     person.getLastName().equals(thePerson.getLastName())) {
@@ -136,8 +129,10 @@ public class DataAccessService {
 
                 writeData("persons", personsCache);
                 logger.info("{} updated successfully", person.getFirstName());
+                found = true;
             }
         }
+        if (!found) logger.error("{} not found", thePerson.getFirstName());
     }
 
     public void deletePerson(String theFirstName, String theLastName) {
@@ -148,6 +143,92 @@ public class DataAccessService {
         logger.info("{} deleted successfully", theFirstName);
     }
 
+    // -------------------------- Firestations --------------------------
+
+    public List<Firestation> findAllFirestations() {
+        logger.info("Finding the firestations from the database");
+        return firestationsCache;
+    }
+
+    public Firestation findFirestationByAddress(String theAddress) {
+        for (Firestation firestation : firestationsCache) {
+            if (firestation.getAddress().equals(theAddress)) {
+                logger.info("Found the firestation with the address {}", firestation.getAddress());
+                return firestation;
+            }
+        }
+        return null;
+    }
+
+    public void addFirestation(Firestation theFirestation) {
+        firestationsCache.add(theFirestation);
+        writeData("firestations", firestationsCache);
+        logger.info("{} added successfully", theFirestation.getAddress());
+    }
+
+    public void updateFirestation(Firestation theFirestation) {
+        boolean found = false;
+        for (Firestation firestation : firestationsCache) {
+            if (firestation.getAddress().equals(theFirestation.getAddress())) {
+                int index = firestationsCache.indexOf(firestation);
+                firestationsCache.set(index, theFirestation);
+                writeData("firestations", firestationsCache);
+                logger.info("{} updated successfully", theFirestation.getAddress());
+                found = true;
+            }
+        }
+        if (!found) logger.error("{} not found", theFirestation.getAddress());
+    }
+
+    public void deleteFirestation(String theAddress) {
+        firestationsCache.removeIf(firestation -> firestation.getAddress().equals(theAddress));
+        writeData("firestations", firestationsCache);
+        logger.info("{} deleted successfully", theAddress);
+    }
+
+    // -------------------------- MedicalRecord --------------------------
+
+    public List<MedicalRecord> findAllMedicalRecords() {
+        logger.info("Finding the medical records from the database");
+        return medicalRecordsCache;
+    }
+
+    public MedicalRecord findMedicalrecordByFirstNameAndLastName(String theFirstName, String theLastName) {
+        for (MedicalRecord medicalRecord : medicalRecordsCache) {
+            if (medicalRecord.getFirstName().equals(theFirstName) && medicalRecord.getLastName().equals(theLastName)) {
+                logger.info("Found the medicalRecord with the first name {} and last name {}", medicalRecord.getFirstName(), medicalRecord.getLastName());
+                return medicalRecord;
+            }
+        }
+        return null;
+    }
+
+    public void addMedicalrecord(MedicalRecord theMedicalrecord) {
+        medicalRecordsCache.add(theMedicalrecord);
+        writeData("medicalrecords", medicalRecordsCache);
+        logger.info("{} added successfully", theMedicalrecord.getFirstName());
+    }
+
+    public void updateMedicalrecord(MedicalRecord theMedicalrecord) {
+        boolean found = false;
+        for (MedicalRecord medicalRecord : medicalRecordsCache) {
+            if (medicalRecord.getFirstName().equals(theMedicalrecord.getFirstName()) &&
+                    medicalRecord.getLastName().equals(theMedicalrecord.getLastName())) {
+                int index = medicalRecordsCache.indexOf(medicalRecord);
+                medicalRecordsCache.set(index, theMedicalrecord);
+                writeData("medicalRecords", medicalRecordsCache);
+                logger.info("{} updated successfully", theMedicalrecord.getFirstName());
+                found = true;
+            }
+        }
+        if (!found) logger.error("{} not found", theMedicalrecord.getFirstName());
+    }
+
+    public void deleteMedicalrecord(String theFirstName, String theLastName) {
+        medicalRecordsCache.removeIf(medicalRecord -> medicalRecord.getFirstName().equals(theFirstName) && medicalRecord.getLastName().equals(theLastName));
+        writeData("medicalRecord", medicalRecordsCache);
+        logger.info("{} deleted successfully", theFirstName);
+    }
 }
 
 /*
@@ -160,7 +241,7 @@ public class DataAccessService {
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    public List<Person> findPersons() {
+    public List<Person> findAllPersons() {
         try {
             // Read the JSON file as a JsonNode
             JsonNode rootNode = mapper.readTree(new File(FILE_PATH));
@@ -181,7 +262,7 @@ public class DataAccessService {
         }
     }
 
-    public List<Firestation> findFirestations() {
+    public List<Firestation> findAllFirestations() {
         try {
             JsonNode rootNode = mapper.readTree(new File(FILE_PATH));
             JsonNode firestationsNode = rootNode.path("firestations");
@@ -196,7 +277,7 @@ public class DataAccessService {
         }
     }
 
-    public List<MedicalRecord> findMedicalRecords() {
+    public List<MedicalRecord> findAllMedicalRecords() {
         try {
             JsonNode rootNode = mapper.readTree(new File(FILE_PATH));
             JsonNode medicalRecordsNode = rootNode.path("medicalrecords");

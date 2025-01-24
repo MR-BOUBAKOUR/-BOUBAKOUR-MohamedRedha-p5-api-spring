@@ -12,14 +12,12 @@ import java.util.List;
 @RestController
 public class PersonRestController {
 
-    private static final Logger logger = LoggerFactory.getLogger(PersonRestController.class);
-
     @Autowired
     private DataAccessService dataAccessService;
 
     @GetMapping("/person")
-    public List<Person> getPersons() {
-        return dataAccessService.findPersons();
+    public List<Person> getAllPersons() {
+        return dataAccessService.findAllPersons();
     }
 
     @GetMapping("/person/{theFirstName}-{theLastName}")
