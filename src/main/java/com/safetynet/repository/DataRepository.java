@@ -8,6 +8,7 @@ import com.safetynet.model.Firestation;
 import com.safetynet.model.MedicalRecord;
 import com.safetynet.model.Person;
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -26,9 +27,12 @@ public class DataRepository {
     private final ObjectMapper mapper = new ObjectMapper();
     private JsonNode rootNode;
 
-    // Accessible from their respective getters and setters
+    // Accessible from their respective getters
+    @Getter
     private List<Person> persons;
+    @Getter
     private List<Firestation> firestations;
+    @Getter
     private List<MedicalRecord> medicalRecords;
 
     // Load the JSON file only once at the start of the application.
@@ -88,30 +92,6 @@ public class DataRepository {
         } catch (IOException e) {
             logger.error("Error writing data to JSON file", e);
         }
-    }
-
-    public List<Person> getPersons() {
-        return persons;
-    }
-
-    public void setPersons(List<Person> persons) {
-        this.persons = persons;
-    }
-
-    public List<Firestation> getFirestations() {
-        return firestations;
-    }
-
-    public void setFirestations(List<Firestation> firestations) {
-        this.firestations = firestations;
-    }
-
-    public List<MedicalRecord> getMedicalRecords() {
-        return medicalRecords;
-    }
-
-    public void setMedicalRecords(List<MedicalRecord> medicalRecords) {
-        this.medicalRecords = medicalRecords;
     }
 
 }
