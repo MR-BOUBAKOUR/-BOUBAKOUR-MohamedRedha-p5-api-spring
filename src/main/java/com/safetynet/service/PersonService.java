@@ -1,5 +1,9 @@
 package com.safetynet.service;
 
+import com.safetynet.dto.person.PersonCreateDTO;
+import com.safetynet.dto.person.PersonResponseDTO;
+import com.safetynet.dto.person.PersonUpdateDTO;
+import com.safetynet.mapper.PersonMapper;
 import com.safetynet.model.Person;
 import com.safetynet.repository.DataRepository;
 import org.slf4j.Logger;
@@ -15,49 +19,60 @@ public class PersonService {
 
     private final DataRepository dataRepository;
     private final List<Person> persons;
+    private final PersonMapper personMapper;
 
-    public PersonService(DataRepository dataRepository) {
+    public PersonService(DataRepository dataRepository, PersonMapper personMapper) {
         this.dataRepository = dataRepository;
         this.persons = dataRepository.getPersons();
+        this.personMapper = personMapper;
     }
 
-    public List<Person> findAllPersons() {
+    public List<PersonResponseDTO> findAllPersons() {
         logger.info("Finding the persons from the database");
-        return dataRepository.getPersons();
+        return persons
+                .stream()
+                .map(personMapper::toResponseDTO)
+                .toList();
     }
 
-    public Person findPersonByFirstNameAndLastName(String theFirstName, String theLastName) {
+    public PersonResponseDTO findPersonByFirstNameAndLastName(String theFirstName, String theLastName) {
         for (Person person : persons) {
             if (person.getFirstName().equals(theFirstName) && person.getLastName().equals(theLastName)) {
                 logger.info("Found the person with the first name {} and last name {}", person.getFirstName(), person.getLastName());
-                return person;
+                return personMapper.toResponseDTO(person);
             }
         }
         return null;
     }
 
-    public void addPerson(Person person) {
+    public void addPerson(PersonCreateDTO thePerson) {
+        Person person = personMapper.toEntityFromCreateDTO(thePerson);
         persons.add(person);
         dataRepository.writeData("persons", persons);
         logger.info("{} added successfully", person.getFirstName());
     }
 
-    public void updatePerson(Person thePerson) {
+    public void updatePerson(PersonUpdateDTO thePerson, String theFirstName, String theLastName) {
         boolean found = false;
         for (Person person : persons) {
-            if (person.getFirstName().equals(thePerson.getFirstName()) &&
-                    person.getLastName().equals(thePerson.getLastName())) {
+            if (person.getFirstName().equals(theFirstName) &&
+                    person.getLastName().equals(theLastName)) {
 
-                // Replace the existing person with the updated person
+                // Merging the DTO with the first and last name injected as params
+                Person updatedPerson = personMapper.toEntityFromUpdateDTO(thePerson);
+                updatedPerson.setFirstName(theFirstName);
+                updatedPerson.setLastName(theLastName);
+
+                // Replace the existing person with the updatedPerson
                 int index = persons.indexOf(person);
-                persons.set(index, thePerson);
+                persons.set(index, updatedPerson);
 
                 dataRepository.writeData("persons", persons);
                 logger.info("{} updated successfully", person.getFirstName());
                 found = true;
             }
         }
-        if (!found) logger.error("{} not found", thePerson.getFirstName());
+        if (!found) logger.error("{} not found", theFirstName + " " + theLastName);
     }
 
     public void deletePerson(String theFirstName, String theLastName) {

@@ -1,5 +1,8 @@
 package com.safetynet.controller;
 
+import com.safetynet.dto.medicalrecord.MedicalRecordCreateDTO;
+import com.safetynet.dto.medicalrecord.MedicalRecordResponseDTO;
+import com.safetynet.dto.medicalrecord.MedicalRecordUpdateDTO;
 import com.safetynet.model.MedicalRecord;
 import com.safetynet.service.MedicalRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,23 +17,23 @@ public class MedicalRecordRestController {
     MedicalRecordService medicalRecordService;
 
     @GetMapping("/medicalRecord")
-    public List<MedicalRecord> getAllMedicalrecords() {
+    public List<MedicalRecordResponseDTO> getAllMedicalrecords() {
         return medicalRecordService.findAllMedicalRecords();
     }
 
     @GetMapping("/medicalRecord/{theFirstName}-{theLastName}")
-    public MedicalRecord getMedicalrecord(@PathVariable String theFirstName, @PathVariable String theLastName) {
+    public MedicalRecordResponseDTO getMedicalrecord(@PathVariable String theFirstName, @PathVariable String theLastName) {
         return medicalRecordService.findMedicalrecordByFirstNameAndLastName(theFirstName, theLastName);
     }
 
     @PostMapping("/medicalRecord")
-    public void addMedicalrecord(@RequestBody MedicalRecord theMedicalrecord) {
+    public void addMedicalrecord(@RequestBody MedicalRecordCreateDTO theMedicalrecord) {
         medicalRecordService.addMedicalrecord(theMedicalrecord);
     }
 
-    @PutMapping("/medicalRecord")
-    public void updateMedicalrecord(@RequestBody MedicalRecord theMedicalrecord) {
-        medicalRecordService.updateMedicalrecord(theMedicalrecord);
+    @PutMapping("/medicalRecord/{theFirstName}-{theLastName}")
+    public void updateMedicalrecord(@RequestBody MedicalRecordUpdateDTO theMedicalrecord, @PathVariable String theFirstName, @PathVariable String theLastName) {
+        medicalRecordService.updateMedicalrecord(theMedicalrecord, theFirstName, theLastName);
     }
 
     @DeleteMapping("/medicalRecord/{theFirstName}-{theLastName}")
