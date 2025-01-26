@@ -3,8 +3,11 @@ package com.safetynet.service;
 import com.safetynet.dto.firestation.FirestationCreateDTO;
 import com.safetynet.dto.firestation.FirestationResponseDTO;
 import com.safetynet.dto.firestation.FirestationUpdateDTO;
+import com.safetynet.exception.ConflictException;
+import com.safetynet.exception.ResourceNotFoundException;
 import com.safetynet.mapper.FirestationMapper;
 import com.safetynet.model.Firestation;
+import com.safetynet.model.MedicalRecord;
 import com.safetynet.repository.DataRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +32,12 @@ public class FirestationService {
     }
 
     public List<FirestationResponseDTO> findAllFirestations() {
-        logger.info("Finding the firestations from the database");
+
+        if (firestations.isEmpty()) {
+            logger.warn("No firestations found in the database");
+            throw new ResourceNotFoundException("Resource not found");
+        }
+
         return firestations
                 .stream()
                 .map(firestationMapper::toResponseDTO)
@@ -37,16 +45,46 @@ public class FirestationService {
     }
 
     public FirestationResponseDTO findFirestationByAddress(String theAddress) {
+
         for (Firestation firestation : firestations) {
             if (firestation.getAddress().equals(theAddress)) {
                 logger.info("Found the firestation with the address {}", firestation.getAddress());
                 return firestationMapper.toResponseDTO(firestation);
             }
         }
-        return null;
+
+        logger.error("Firestation not found for address: {}", theAddress);
+        throw new ResourceNotFoundException("Resource not found");
     }
 
+    /*
+
+    public FirestationResponseDTO findFirestationByAddress(String theAddress) {
+        return firestations.stream()
+                .filter(firestation -> firestation.getAddress().equals(theAddress))
+                .findFirst()
+                .map(firestation -> {
+                    logger.info("Found firestation at the address: {}", firestation.getAddress());
+                    return firestationMapper.toResponseDTO(firestation);
+                })
+                .orElseThrow(() -> {
+                    logger.error("Firestation not found for address: {}", theAddress);
+                    return new ResourceNotFoundException("Resource not found");
+                });
+    }
+
+    */
+
     public void addFirestation(FirestationCreateDTO theFirestation) {
+
+        boolean exists = firestations.stream()
+                .anyMatch(firestation -> firestation.getAddress().equals(theFirestation.getAddress()));
+
+        if (exists) {
+            logger.warn("Firestation already exists at the address: {}", theFirestation.getAddress());
+            throw new ConflictException("Resource already exist");
+        }
+
         Firestation firestation = firestationMapper.toEntityFromCreateDTO(theFirestation);
         firestations.add(firestation);
         dataRepository.writeData("firestations", firestations);
@@ -54,7 +92,9 @@ public class FirestationService {
     }
 
     public void updateFirestation(FirestationUpdateDTO theFirestation, String theAddress) {
+
         boolean found = false;
+
         for (Firestation firestation : firestations) {
             if (firestation.getAddress().equals(theAddress)) {
 
@@ -68,11 +108,22 @@ public class FirestationService {
                 found = true;
             }
         }
-        if (!found) logger.error("{} not found", theAddress);
+
+        if (!found) {
+            logger.error("Firestation not found for address: {}", theAddress);
+            throw new ResourceNotFoundException("Resource not found");
+        }
     }
 
     public void deleteFirestation(String theAddress) {
-        firestations.removeIf(firestation -> firestation.getAddress().equals(theAddress));
+
+        boolean removed = firestations.removeIf(firestation -> firestation.getAddress().equals(theAddress));
+
+        if (!removed) {
+            logger.error("Firestation not found for address: {}", theAddress);
+            throw new ResourceNotFoundException("Resource not found");
+        }
+
         dataRepository.writeData("firestations", firestations);
         logger.info("{} deleted successfully", theAddress);
     }
