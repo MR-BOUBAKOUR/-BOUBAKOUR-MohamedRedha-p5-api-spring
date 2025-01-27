@@ -3,6 +3,8 @@ package com.safetynet.service;
 import com.safetynet.dto.person.PersonCreateDTO;
 import com.safetynet.dto.person.PersonResponseDTO;
 import com.safetynet.dto.person.PersonUpdateDTO;
+import com.safetynet.exception.ConflictException;
+import com.safetynet.exception.ResourceNotFoundException;
 import com.safetynet.mapper.PersonMapper;
 import com.safetynet.model.Person;
 import com.safetynet.repository.DataRepository;
@@ -28,7 +30,12 @@ public class PersonService {
     }
 
     public List<PersonResponseDTO> findAllPersons() {
-        logger.info("Finding the persons from the database");
+
+        if (persons.isEmpty()) {
+            logger.warn("No persons found in the database");
+            throw new ResourceNotFoundException("Resource not found");
+        }
+
         return persons
                 .stream()
                 .map(personMapper::toResponseDTO)
@@ -42,10 +49,22 @@ public class PersonService {
                 return personMapper.toResponseDTO(person);
             }
         }
-        return null;
+
+        logger.error("Person not found : {} {}", theFirstName, theLastName);
+        throw new ResourceNotFoundException("Resource not found");
     }
 
     public void addPerson(PersonCreateDTO thePerson) {
+
+        boolean exists = persons.stream().anyMatch(persons ->
+                persons.getFirstName().equals(thePerson.getFirstName()) && persons.getLastName().equals(thePerson.getLastName())
+        );
+
+        if (exists) {
+            logger.warn("Person already exist : {} {}", thePerson.getFirstName(), thePerson.getLastName());
+            throw new ConflictException("Resource already exist");
+        }
+
         Person person = personMapper.toEntityFromCreateDTO(thePerson);
         persons.add(person);
         dataRepository.writeData("persons", persons);
@@ -72,13 +91,22 @@ public class PersonService {
                 found = true;
             }
         }
-        if (!found) logger.error("{} not found", theFirstName + " " + theLastName);
+        if (!found) {
+            logger.error("Person not found for : {} {}", theFirstName, theLastName);
+            throw new ResourceNotFoundException("Resource not found");
+        }
     }
 
     public void deletePerson(String theFirstName, String theLastName) {
         // Not using the "persons.remove(person)" to avoid ConcurrentModificationException.
         // Occurs when a collection is modified while it is being iterated over.
-        persons.removeIf(person -> person.getFirstName().equals(theFirstName) && person.getLastName().equals(theLastName));
+        boolean removed = persons.removeIf(person -> person.getFirstName().equals(theFirstName) && person.getLastName().equals(theLastName));
+
+        if (!removed) {
+            logger.error("Person not found : {} {}", theFirstName, theLastName);
+            throw new ResourceNotFoundException("Resource not found");
+        }
+
         dataRepository.writeData("persons", persons);
         logger.info("{} deleted successfully", theFirstName);
     }

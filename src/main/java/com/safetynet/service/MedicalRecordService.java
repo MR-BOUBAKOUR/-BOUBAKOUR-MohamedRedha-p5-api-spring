@@ -3,6 +3,8 @@ package com.safetynet.service;
 import com.safetynet.dto.medicalrecord.MedicalRecordCreateDTO;
 import com.safetynet.dto.medicalrecord.MedicalRecordResponseDTO;
 import com.safetynet.dto.medicalrecord.MedicalRecordUpdateDTO;
+import com.safetynet.exception.ConflictException;
+import com.safetynet.exception.ResourceNotFoundException;
 import com.safetynet.mapper.MedicalRecordMapper;
 import com.safetynet.model.MedicalRecord;
 import com.safetynet.repository.DataRepository;
@@ -28,7 +30,12 @@ public class MedicalRecordService {
     }
 
     public List<MedicalRecordResponseDTO> findAllMedicalRecords() {
-        logger.info("Finding the medical records from the database");
+
+        if (medicalRecords.isEmpty()) {
+            logger.warn("No medicalRecords found in the database");
+            throw new ResourceNotFoundException("Resource not found");
+        }
+
         return medicalRecords
                 .stream()
                 .map(medicalRecordMapper::toResponseDTO)
@@ -36,16 +43,29 @@ public class MedicalRecordService {
     }
 
     public MedicalRecordResponseDTO findMedicalrecordByFirstNameAndLastName(String theFirstName, String theLastName) {
+
         for (MedicalRecord medicalRecord : medicalRecords) {
             if (medicalRecord.getFirstName().equals(theFirstName) && medicalRecord.getLastName().equals(theLastName)) {
                 logger.info("Found the medicalRecord with the first name {} and last name {}", medicalRecord.getFirstName(), medicalRecord.getLastName());
                 return medicalRecordMapper.toResponseDTO(medicalRecord);
             }
         }
-        return null;
+
+        logger.error("MedicalRecord not found for : {} {}", theFirstName, theLastName);
+        throw new ResourceNotFoundException("Resource not found");
     }
 
     public void addMedicalrecord(MedicalRecordCreateDTO theMedicalrecord) {
+
+        boolean exists = medicalRecords.stream().anyMatch(medicalRecord ->
+                medicalRecord.getFirstName().equals(theMedicalrecord.getFirstName()) && medicalRecord.getLastName().equals(theMedicalrecord.getLastName())
+        );
+
+        if (exists) {
+            logger.warn("Medicalrecord already exists at for : {} {}", theMedicalrecord.getFirstName(), theMedicalrecord.getLastName());
+            throw new ConflictException("Resource already exist");
+        }
+
         MedicalRecord medicalRecord = medicalRecordMapper.toEntityFromCreateDTO(theMedicalrecord);
         medicalRecords.add(medicalRecord);
         dataRepository.writeData("medicalrecords", medicalRecords);
@@ -69,11 +89,20 @@ public class MedicalRecordService {
                 found = true;
             }
         }
-        if (!found) logger.error("{} not found", theFirstName);
+        if (!found) {
+            logger.error("MedicalRecord not found for : {} {}", theFirstName, theLastName);
+            throw new ResourceNotFoundException("Resource not found");
+        }
     }
 
     public void deleteMedicalrecord(String theFirstName, String theLastName) {
-        medicalRecords.removeIf(medicalRecord -> medicalRecord.getFirstName().equals(theFirstName) && medicalRecord.getLastName().equals(theLastName));
+        boolean removed = medicalRecords.removeIf(medicalRecord -> medicalRecord.getFirstName().equals(theFirstName) && medicalRecord.getLastName().equals(theLastName));
+
+        if (!removed) {
+            logger.error("MedicalRecord not found for address: {} {}", theFirstName, theLastName);
+            throw new ResourceNotFoundException("Resource not found");
+        }
+
         dataRepository.writeData("medicalRecord", medicalRecords);
         logger.info("{} deleted successfully", theFirstName);
     }
