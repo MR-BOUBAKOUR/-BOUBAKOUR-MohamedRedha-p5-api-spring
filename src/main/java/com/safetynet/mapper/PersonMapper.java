@@ -1,9 +1,6 @@
 package com.safetynet.mapper;
 
-import com.safetynet.dto.person.PersonCreateDTO;
-import com.safetynet.dto.person.PersonResponseDTO;
-import com.safetynet.dto.person.PersonUpdateDTO;
-import com.safetynet.dto.person.PersonsByStationCoverageResponseDTO;
+import com.safetynet.dto.person.*;
 import com.safetynet.model.Person;
 import com.safetynet.model.Person;
 import org.mapstruct.Mapper;
@@ -23,6 +20,6 @@ public interface PersonMapper {
 
     Person toEntityFromResponseDTO(PersonResponseDTO personResponseDTO);
 
-    PersonsByStationCoverageResponseDTO toPersonsByStationCoverageResponseDTO(Person person);
+    PersonByStationCoverageResponseDTO toPersonByStationCoverageResponseDTO(Person person);
 
 }

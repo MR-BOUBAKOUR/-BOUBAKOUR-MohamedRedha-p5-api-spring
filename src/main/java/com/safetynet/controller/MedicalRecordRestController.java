@@ -5,6 +5,7 @@ import com.safetynet.dto.medicalrecord.MedicalRecordResponseDTO;
 import com.safetynet.dto.medicalrecord.MedicalRecordUpdateDTO;
 import com.safetynet.model.MedicalRecord;
 import com.safetynet.service.MedicalRecordService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,12 +28,12 @@ public class MedicalRecordRestController {
     }
 
     @PostMapping("/medicalrecord")
-    public void addMedicalrecord(@RequestBody MedicalRecordCreateDTO theMedicalrecord) {
+    public void addMedicalrecord(@Valid @RequestBody MedicalRecordCreateDTO theMedicalrecord) {
         medicalRecordService.addMedicalrecord(theMedicalrecord);
     }
 
     @PutMapping("/medicalrecord/{theFirstName}-{theLastName}")
-    public void updateMedicalrecord(@RequestBody MedicalRecordUpdateDTO theMedicalrecord, @PathVariable String theFirstName, @PathVariable String theLastName) {
+    public void updateMedicalrecord(@Valid @RequestBody MedicalRecordUpdateDTO theMedicalrecord, @PathVariable String theFirstName, @PathVariable String theLastName) {
         medicalRecordService.updateMedicalrecord(theMedicalrecord, theFirstName, theLastName);
     }
 

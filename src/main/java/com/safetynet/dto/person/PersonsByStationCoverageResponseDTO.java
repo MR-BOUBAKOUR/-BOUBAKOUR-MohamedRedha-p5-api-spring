@@ -2,19 +2,18 @@ package com.safetynet.dto.person;
 
 import lombok.*;
 
-@Setter
-@Getter
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+@Setter @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class PersonsByStationCoverageResponseDTO {
 
-    private String firstName;
-    private String lastName;
-    private String address;
-    private String phone;
+    private AtomicInteger adultCount;
+    private AtomicInteger childCount;
 
-    private int adultCount;
-    private int childCount;
+    private List<PersonByStationCoverageResponseDTO> persons;
 
 }

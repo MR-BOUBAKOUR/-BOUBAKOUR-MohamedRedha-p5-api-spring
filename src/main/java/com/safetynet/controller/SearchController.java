@@ -17,8 +17,8 @@ public class SearchController {
     @Autowired
     private SearchService searchService;
 
-    @GetMapping("/firestationx")
-    public List<PersonsByStationCoverageResponseDTO> getPersonsByFireStationCoverage(@RequestParam int stationNumber) {
+    @GetMapping("/firestationCoverage")
+    public PersonsByStationCoverageResponseDTO getPersonsByFireStationCoverage(@RequestParam int stationNumber) {
         return searchService.getCoveredPersonsByStation(stationNumber);
     }
 
