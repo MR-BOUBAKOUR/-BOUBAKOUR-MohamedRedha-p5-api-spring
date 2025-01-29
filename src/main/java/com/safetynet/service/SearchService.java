@@ -1,9 +1,9 @@
 package com.safetynet.service;
 
-import com.safetynet.dto.person.PersonByStationCoverageResponseDTO;
-import com.safetynet.dto.person.PersonsByStationCoverageResponseDTO;
+import com.safetynet.dto.person.PersonForFirestationCoverageResponseDTO;
+import com.safetynet.dto.search.*;
 import com.safetynet.exception.ResourceNotFoundException;
-import com.safetynet.mapper.PersonMapper;
+import com.safetynet.mapper.SearchMapper;
 import com.safetynet.model.Firestation;
 import com.safetynet.model.MedicalRecord;
 import com.safetynet.model.Person;
@@ -28,17 +28,17 @@ public class SearchService {
     List<Firestation> firestations;
     List<MedicalRecord> medicalRecords;
 
-    private final PersonMapper personMapper;
+    private final SearchMapper searchMapper;
 
-    public SearchService(DataRepository dataRepository, PersonMapper personMapper) {
+    public SearchService(DataRepository dataRepository, SearchMapper searchMapper) {
         this.firestations = dataRepository.getFirestations();
         this.medicalRecords = dataRepository.getMedicalRecords();
         this.persons = dataRepository.getPersons();
 
-        this.personMapper = personMapper;
+        this.searchMapper = searchMapper;
     }
 
-    public PersonsByStationCoverageResponseDTO getCoveredPersonsByStation(int stationNumber) {
+    public FirestationCoverageResponseDTO getCoveredPersonsByStation(int stationNumber) {
 
         AtomicInteger adultCount = new AtomicInteger();
         AtomicInteger childCount = new AtomicInteger();
@@ -51,7 +51,7 @@ public class SearchService {
             throw new ResourceNotFoundException("No firestations found for station number: " + stationNumber);
         }
 
-        List<PersonByStationCoverageResponseDTO> coveredPersons = persons.stream()
+        List<PersonForFirestationCoverageResponseDTO> coveredPersons = persons.stream()
                 .filter(person -> firestationsWithSameNumberStation.stream()
                         .anyMatch(firestation -> firestation.getAddress().equals(person.getAddress())))
                 .map(person -> {
@@ -61,19 +61,41 @@ public class SearchService {
 
                     if (age >= 18) {
                         adultCount.incrementAndGet();
-                    } else if (age >= 0) {
+                    } else {
                         childCount.incrementAndGet();
                     }
 
-                    return personMapper.toPersonByStationCoverageResponseDTO(person);
+                    return searchMapper.toPersonForFirestationCoverageResponseDTO(person);
                 })
                 .toList();
 
-        return new PersonsByStationCoverageResponseDTO(
+        return new FirestationCoverageResponseDTO(
                 adultCount,
                 childCount,
                 coveredPersons
         );
+    }
+
+    public ChildAlertResponseDTO getChildrenByAddress(String address) { return null; }
+
+    public PhoneAlertResponseDTO getPhonesByStation(int stationNumber) {
+        return null;
+    }
+
+    public FireResponseDTO getPersonsByAddressStation(String address) {
+        return null;
+    }
+
+    public FloodStationsResponseDTO getPersonsByStationsWithMedicalRecord(List<Integer> stationNumber) {
+        return null;
+    }
+
+    public PersonsInfoLastNameResponseDTO getPersonByLastNameWithMedicalRecord(String lastName) {
+        return null;
+    }
+
+    public CommunityEmailResponseDTO getEmailsByCity(String city) {
+        return null;
     }
 
     public LocalDate getDateOfBirth(Person person) {
@@ -98,5 +120,4 @@ public class SearchService {
     public int calculateAge(LocalDate dateOfBirth) {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
-
 }

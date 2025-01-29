@@ -1,5 +1,6 @@
-package com.safetynet.dto.person;
+package com.safetynet.dto.search;
 
+import com.safetynet.dto.person.PersonForFirestationCoverageResponseDTO;
 import lombok.*;
 
 import java.util.List;
@@ -9,11 +10,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PersonsByStationCoverageResponseDTO {
+public class FirestationCoverageResponseDTO {
 
     private AtomicInteger adultCount;
     private AtomicInteger childCount;
 
-    private List<PersonByStationCoverageResponseDTO> persons;
+    private List<PersonForFirestationCoverageResponseDTO> persons;
 
 }

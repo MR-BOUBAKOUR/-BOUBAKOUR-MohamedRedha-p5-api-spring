@@ -6,7 +6,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class PersonByStationCoverageResponseDTO {
+public class PersonForFirestationCoverageResponseDTO {
     private String firstName;
     private String lastName;
     private String address;
