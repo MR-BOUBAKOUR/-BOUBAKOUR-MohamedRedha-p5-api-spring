@@ -1,8 +1,11 @@
 package com.safetynet.service;
 
+import com.safetynet.dto.person.ChildForChildAlertResponseDTO;
 import com.safetynet.dto.person.PersonForFirestationCoverageResponseDTO;
+import com.safetynet.dto.person.PersonResponseDTO;
 import com.safetynet.dto.search.*;
 import com.safetynet.exception.ResourceNotFoundException;
+import com.safetynet.mapper.PersonMapper;
 import com.safetynet.mapper.SearchMapper;
 import com.safetynet.model.Firestation;
 import com.safetynet.model.MedicalRecord;
@@ -23,6 +26,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SearchService {
 
     private static final Logger logger = LoggerFactory.getLogger(SearchService.class);
+    private final PersonMapper personMapper;
 
     List<Person> persons;
     List<Firestation> firestations;
@@ -30,12 +34,13 @@ public class SearchService {
 
     private final SearchMapper searchMapper;
 
-    public SearchService(DataRepository dataRepository, SearchMapper searchMapper) {
+    public SearchService(DataRepository dataRepository, SearchMapper searchMapper, PersonMapper personMapper) {
         this.firestations = dataRepository.getFirestations();
         this.medicalRecords = dataRepository.getMedicalRecords();
         this.persons = dataRepository.getPersons();
 
         this.searchMapper = searchMapper;
+        this.personMapper = personMapper;
     }
 
     public FirestationCoverageResponseDTO getCoveredPersonsByStation(int stationNumber) {
@@ -44,42 +49,91 @@ public class SearchService {
         AtomicInteger childCount = new AtomicInteger();
 
         List<Firestation> firestationsWithSameNumberStation = firestations.stream()
-                .filter(firestation -> firestation.getStation() == stationNumber)
-                .toList();
+            .filter(firestation -> firestation.getStation() == stationNumber)
+            .toList();
 
         if (firestationsWithSameNumberStation.isEmpty()) {
             throw new ResourceNotFoundException("No firestations found for station number: " + stationNumber);
         }
 
         List<PersonForFirestationCoverageResponseDTO> coveredPersons = persons.stream()
-                .filter(person -> firestationsWithSameNumberStation.stream()
-                        .anyMatch(firestation -> firestation.getAddress().equals(person.getAddress())))
-                .map(person -> {
+            .filter(person ->
+                    firestationsWithSameNumberStation.stream().anyMatch(firestation -> firestation.getAddress().equals(person.getAddress())))
+            .map(person -> {
 
-                    LocalDate dateOfBirth = getDateOfBirth(person);
-                    int age = calculateAge(dateOfBirth);
+                LocalDate dateOfBirth = getDateOfBirth(person);
+                int age = calculateAge(dateOfBirth);
 
-                    if (age >= 18) {
-                        adultCount.incrementAndGet();
-                    } else {
-                        childCount.incrementAndGet();
-                    }
+                if (age >= 18) {
+                    adultCount.incrementAndGet();
+                } else {
+                    childCount.incrementAndGet();
+                }
 
-                    return searchMapper.toPersonForFirestationCoverageResponseDTO(person);
-                })
-                .toList();
+                return searchMapper.toPersonForFirestationCoverageResponseDTO(person);
+            })
+            .toList();
 
         return new FirestationCoverageResponseDTO(
-                adultCount,
-                childCount,
-                coveredPersons
+            adultCount,
+            childCount,
+            coveredPersons
         );
     }
 
-    public ChildAlertResponseDTO getChildrenByAddress(String address) { return null; }
+    public ChildAlertResponseDTO getChildrenByAddress(String address) {
+
+        List<Person> residents = persons.stream()
+            .filter(person -> person.getAddress().equals(address))
+            .toList();
+
+        if (residents.isEmpty()) {
+            return new ChildAlertResponseDTO(List.of());
+        }
+
+        List<ChildForChildAlertResponseDTO> children = residents.stream()
+            .filter(resident -> {
+                LocalDate dateOfBirth = getDateOfBirth(resident);
+                return calculateAge(dateOfBirth) <= 18;
+            })
+            .map(child -> {
+                LocalDate birthDate = getDateOfBirth(child);
+                int age = calculateAge(birthDate);
+
+                List<PersonResponseDTO> relatives = residents.stream()
+                    .filter(resident -> !resident.equals(child))
+                    .map(personMapper::toResponseDTO)
+                    .toList();
+
+                return new ChildForChildAlertResponseDTO(
+                    child.getFirstName(),
+                    child.getLastName(),
+                    age,
+                    relatives
+                );
+            })
+            .toList();
+
+        return new ChildAlertResponseDTO(children);
+    }
 
     public PhoneAlertResponseDTO getPhonesByStation(int stationNumber) {
-        return null;
+
+        List<Firestation> firestationsWithSameNumberStation = firestations.stream()
+            .filter(firestation -> firestation.getStation() == stationNumber)
+            .toList();
+
+        if (firestationsWithSameNumberStation.isEmpty()) {
+            throw new ResourceNotFoundException("No firestations found for station number: " + stationNumber);
+        }
+
+        List<String> phones = persons.stream()
+            .filter(person ->
+                    firestationsWithSameNumberStation.stream().anyMatch(firestation -> firestation.getAddress().equals(person.getAddress())))
+            .map(Person::getPhone)
+            .toList();
+
+        return new PhoneAlertResponseDTO(phones);
     }
 
     public FireResponseDTO getPersonsByAddressStation(String address) {
@@ -95,11 +149,21 @@ public class SearchService {
     }
 
     public CommunityEmailResponseDTO getEmailsByCity(String city) {
-        return null;
+
+        List<String> emails = persons.stream()
+                .filter(person -> person.getCity().equals(city))
+                .map(Person::getEmail)
+                .toList();
+
+        if (emails.isEmpty()) {
+            throw new ResourceNotFoundException("Resource not found for the city: " + city);
+        }
+
+        return new CommunityEmailResponseDTO(emails);
     }
 
     public LocalDate getDateOfBirth(Person person) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         return medicalRecords.stream()
             .filter(record ->
                 record.getFirstName().equals(person.getFirstName())

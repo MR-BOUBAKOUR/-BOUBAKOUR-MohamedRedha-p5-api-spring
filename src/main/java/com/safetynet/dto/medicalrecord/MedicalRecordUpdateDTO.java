@@ -15,7 +15,7 @@ import java.util.List;
 public class MedicalRecordUpdateDTO {
 
     @NotEmpty(message = "Birthdate cannot be empty")
-    @Pattern(regexp = "^\\d{2}/\\d{2}/\\d{4}$", message = "Birthdate must be in the format dd/MM/yyyy")
+    @Pattern(regexp = "^\\d{2}/\\d{2}/\\d{4}$", message = "Birthdate must be in the format MM/dd/yyyy")
     @Past(message = "Birthdate must be a past date")
     private String birthdate;
 
