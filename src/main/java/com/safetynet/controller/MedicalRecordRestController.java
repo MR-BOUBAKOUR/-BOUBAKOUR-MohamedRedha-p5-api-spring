@@ -3,7 +3,6 @@ package com.safetynet.controller;
 import com.safetynet.dto.medicalrecord.MedicalRecordCreateDTO;
 import com.safetynet.dto.medicalrecord.MedicalRecordResponseDTO;
 import com.safetynet.dto.medicalrecord.MedicalRecordUpdateDTO;
-import com.safetynet.model.MedicalRecord;
 import com.safetynet.service.MedicalRecordService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
