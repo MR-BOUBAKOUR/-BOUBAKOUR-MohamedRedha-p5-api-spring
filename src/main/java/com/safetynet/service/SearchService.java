@@ -1,9 +1,6 @@
 package com.safetynet.service;
 
-import com.safetynet.dto.person.ChildForChildAlertResponseDTO;
-import com.safetynet.dto.person.PersonForFireResponseDTO;
-import com.safetynet.dto.person.PersonForFirestationCoverageResponseDTO;
-import com.safetynet.dto.person.PersonResponseDTO;
+import com.safetynet.dto.person.*;
 import com.safetynet.dto.search.*;
 import com.safetynet.exception.ResourceNotFoundException;
 import com.safetynet.mapper.PersonMapper;
@@ -22,6 +19,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
@@ -152,29 +150,77 @@ public class SearchService {
         }
 
         List<PersonForFireResponseDTO> persons = residents.stream()
-            .map(person ->
-                new PersonForFireResponseDTO(
-                    person.getLastName(),
-                    person.getPhone(),
-                    getAge(person),
-                    getMedications(person),
-                    getAllergies(person)
-                )
-            )
+            .map(person -> new PersonForFireResponseDTO(
+                person.getLastName(),
+                person.getPhone(),
+                getAge(person),
+                getMedications(person),
+                getAllergies(person)
+            ))
             .toList();
 
         return new FireResponseDTO(
-                stations,
-                persons
+            stations,
+            persons
         );
     }
 
-    public FloodStationsResponseDTO getPersonsByStationsWithMedicalRecord(List<Integer> stationNumber) {
-        return null;
+    public FloodStationsResponseDTO getPersonsByStationsWithMedicalRecord(List<Integer> stationNumbers) {
+
+        List<String> firestationsByAddress = new ArrayList<>();
+
+        for (Integer stationNumber : stationNumbers) {
+            firestations.stream()
+                .filter(firestation -> firestation.getStation() == stationNumber)
+                .map(Firestation::getAddress)
+                .forEach(firestationsByAddress::add);
+        }
+
+        if (firestationsByAddress.isEmpty()) {
+            throw new ResourceNotFoundException("Resource not found for station numbers: " + stationNumbers);
+        }
+
+        List<Person> residents = persons.stream()
+            .filter(person -> firestationsByAddress.contains(person.getAddress()))
+            .toList();
+
+        if (residents.isEmpty()) {
+            throw new ResourceNotFoundException("No residents found for the given stations.");
+        }
+
+        List<PersonForFloodStationsResponseDTO> persons = residents.stream()
+            .map(person -> new PersonForFloodStationsResponseDTO(
+                person.getAddress(),
+                person.getLastName(),
+                person.getPhone(),
+                getAge(person),
+                getMedications(person),
+                getAllergies(person)
+            ))
+            .toList();
+
+        return new FloodStationsResponseDTO(persons);
     }
 
     public PersonsInfoLastNameResponseDTO getPersonByLastNameWithMedicalRecord(String lastName) {
-        return null;
+
+        List<PersonForPersonsInfoLastNameResponseDTO> personsTargeted = persons.stream()
+                .filter(person -> person.getLastName().equals(lastName))
+                .map(person -> new PersonForPersonsInfoLastNameResponseDTO(
+                        person.getLastName(),
+                        person.getAddress(),
+                        getAge(person),
+                        person.getEmail(),
+                        getMedications(person),
+                        getAllergies(person)
+                ))
+                .toList();
+
+        if (personsTargeted.isEmpty()) {
+            throw new ResourceNotFoundException("Resource not found for the lastName: " + lastName);
+        }
+
+        return new PersonsInfoLastNameResponseDTO(personsTargeted);
     }
 
     public CommunityEmailResponseDTO getEmailsByCity(String city) {

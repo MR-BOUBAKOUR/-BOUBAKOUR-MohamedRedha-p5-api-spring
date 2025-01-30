@@ -39,8 +39,8 @@ public class SearchController {
     }
 
     @GetMapping("/flood/stations")
-    public FloodStationsResponseDTO getPersonsByStationsWithMedicalRecord(@RequestParam List<Integer> stationNumber) {
-        return searchService.getPersonsByStationsWithMedicalRecord(stationNumber);
+    public FloodStationsResponseDTO getPersonsByStationsWithMedicalRecord(@RequestParam List<Integer> stationNumbers) {
+        return searchService.getPersonsByStationsWithMedicalRecord(stationNumbers);
     }
 
     @GetMapping("/personInfoLastName={lastName}")
