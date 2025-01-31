@@ -23,7 +23,7 @@ public class DataRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(DataRepository.class);
 
-    private static final String FILE_PATH = "src/main/resources/data.json";
+    public static String FILE_PATH = "src/main/resources/data.json";
     private final ObjectMapper mapper = new ObjectMapper();
     private JsonNode rootNode;
 
@@ -54,7 +54,7 @@ public class DataRepository {
         }
     }
 
-    private <T> List<T> readData(String theNodeName, Class<T> theClass) {
+    public <T> List<T> readData(String theNodeName, Class<T> theClass) {
         try {
             // Retrieve the specified node (e.g., "persons", "firestations", etc.) from the root object using the provided node name.
             JsonNode node = rootNode.path(theNodeName);

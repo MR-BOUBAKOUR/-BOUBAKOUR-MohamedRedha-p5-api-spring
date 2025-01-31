@@ -1,6 +1,6 @@
 package com.safetynet.dto.search;
 
-import com.safetynet.dto.person.ChildForChildAlertResponseDTO;
+import com.safetynet.dto.person.PersonForChildAlertResponseDTO;
 import lombok.*;
 
 import java.util.List;
@@ -12,6 +12,6 @@ import java.util.List;
 @ToString
 public class ChildAlertResponseDTO {
 
-    List<ChildForChildAlertResponseDTO> children;
+    List<PersonForChildAlertResponseDTO> children;
 
 }

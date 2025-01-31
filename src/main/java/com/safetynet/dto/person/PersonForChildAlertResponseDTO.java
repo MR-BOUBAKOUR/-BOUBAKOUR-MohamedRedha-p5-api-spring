@@ -9,7 +9,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ChildForChildAlertResponseDTO {
+public class PersonForChildAlertResponseDTO {
 
     private String firstName;
     private String lastName;

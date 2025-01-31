@@ -41,6 +41,8 @@ public class SearchService {
         this.personMapper = personMapper;
     }
 
+
+
     public FirestationCoverageResponseDTO getCoveredPersonsByStation(int stationNumber) {
 
         AtomicInteger adultCount = new AtomicInteger();
@@ -51,6 +53,7 @@ public class SearchService {
             .toList();
 
         if (firestationsWithSameNumberStation.isEmpty()) {
+            logger.warn("Resource not found");
             throw new ResourceNotFoundException("No firestations found for station number: " + stationNumber);
         }
 
@@ -84,10 +87,11 @@ public class SearchService {
             .toList();
 
         if (residents.isEmpty()) {
+            logger.warn("Resource not found");
             return new ChildAlertResponseDTO(List.of());
         }
 
-        List<ChildForChildAlertResponseDTO> children = residents.stream()
+        List<PersonForChildAlertResponseDTO> children = residents.stream()
             .filter(resident -> getAge(resident) <= 18)
             .map(child -> {
 
@@ -96,7 +100,7 @@ public class SearchService {
                     .map(personMapper::toResponseDTO)
                     .toList();
 
-                return new ChildForChildAlertResponseDTO(
+                return new PersonForChildAlertResponseDTO(
                     child.getFirstName(),
                     child.getLastName(),
                     getAge(child),
@@ -115,6 +119,7 @@ public class SearchService {
             .toList();
 
         if (firestationsWithSameNumberStation.isEmpty()) {
+            logger.warn("Resource not found");
             throw new ResourceNotFoundException("No firestations found for station number: " + stationNumber);
         }
 
@@ -136,6 +141,7 @@ public class SearchService {
             .toList();
 
         if (stations.isEmpty()) {
+            logger.warn("Resource not found");
             throw new ResourceNotFoundException("No firestation found for address: " + address);
         }
 
@@ -144,6 +150,7 @@ public class SearchService {
             .toList();
 
         if (residents.isEmpty()) {
+            logger.warn("Resource not found");
             throw new ResourceNotFoundException("No residents found for the address: " + address);
         }
 
@@ -175,6 +182,7 @@ public class SearchService {
         }
 
         if (firestationsByAddress.isEmpty()) {
+            logger.warn("Resource not found");
             throw new ResourceNotFoundException("Resource not found for station numbers: " + stationNumbers);
         }
 
@@ -183,6 +191,7 @@ public class SearchService {
             .toList();
 
         if (residents.isEmpty()) {
+            logger.warn("Resource not found");
             throw new ResourceNotFoundException("No residents found for the given stations.");
         }
 
@@ -215,6 +224,7 @@ public class SearchService {
                 .toList();
 
         if (personsTargeted.isEmpty()) {
+            logger.warn("Resource not found");
             throw new ResourceNotFoundException("Resource not found for the lastName: " + lastName);
         }
 
@@ -229,6 +239,7 @@ public class SearchService {
             .toList();
 
         if (emails.isEmpty()) {
+            logger.warn("Resource not found");
             throw new ResourceNotFoundException("Resource not found for the city: " + city);
         }
 
@@ -241,7 +252,10 @@ public class SearchService {
                 record.getFirstName().equals(person.getFirstName()) &&
                 record.getLastName().equals(person.getLastName()))
             .findFirst()
-            .orElseThrow(() -> new ResourceNotFoundException("Medical record not found"));
+            .orElseThrow(() -> {
+                logger.warn("Resource not found");
+                return new ResourceNotFoundException("Medical record not found");
+            });
     }
 
     public List<String> getMedications(Person person) {

@@ -16,27 +16,27 @@ public class MedicalRecordRestController {
     @Autowired
     MedicalRecordService medicalRecordService;
 
-    @GetMapping("/medicalrecord")
+    @GetMapping("/medicalRecord")
     public List<MedicalRecordResponseDTO> getAllMedicalrecords() {
         return medicalRecordService.findAllMedicalRecords();
     }
 
-    @GetMapping("/medicalrecord/{theFirstName}-{theLastName}")
+    @GetMapping("/medicalRecord/{theFirstName}-{theLastName}")
     public MedicalRecordResponseDTO getMedicalrecord(@PathVariable String theFirstName, @PathVariable String theLastName) {
         return medicalRecordService.findMedicalrecordByFirstNameAndLastName(theFirstName, theLastName);
     }
 
-    @PostMapping("/medicalrecord")
+    @PostMapping("/medicalRecord")
     public void addMedicalrecord(@Valid @RequestBody MedicalRecordCreateDTO theMedicalrecord) {
         medicalRecordService.addMedicalrecord(theMedicalrecord);
     }
 
-    @PutMapping("/medicalrecord/{theFirstName}-{theLastName}")
+    @PutMapping("/medicalRecord/{theFirstName}-{theLastName}")
     public void updateMedicalrecord(@Valid @RequestBody MedicalRecordUpdateDTO theMedicalrecord, @PathVariable String theFirstName, @PathVariable String theLastName) {
         medicalRecordService.updateMedicalrecord(theMedicalrecord, theFirstName, theLastName);
     }
 
-    @DeleteMapping("/medicalrecord/{theFirstName}-{theLastName}")
+    @DeleteMapping("/medicalRecord/{theFirstName}-{theLastName}")
     public void deleteMedicalrecord(@PathVariable String theFirstName, @PathVariable String theLastName) {
         medicalRecordService.deleteMedicalrecord(theFirstName, theLastName);
     }
