@@ -16,8 +16,12 @@ import java.util.List;
 @RestController
 public class MedicalRecordRestController {
 
+    private final MedicalRecordService medicalRecordService;
+
     @Autowired
-    private MedicalRecordService medicalRecordService;
+    public MedicalRecordRestController(MedicalRecordService medicalRecordService) {
+        this.medicalRecordService = medicalRecordService;
+    }
 
     @GetMapping("/medicalRecord")
     public List<MedicalRecordResponseDTO> getAllMedicalrecords() {

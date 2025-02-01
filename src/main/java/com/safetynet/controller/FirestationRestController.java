@@ -16,8 +16,12 @@ import java.util.List;
 @RestController
 public class FirestationRestController {
 
+    private final FirestationService firestationService;
+
     @Autowired
-    private FirestationService firestationService;
+    public FirestationRestController(FirestationService firestationService) {
+        this.firestationService = firestationService;
+    }
 
     @GetMapping("/firestation")
     public List<FirestationResponseDTO> getAllFirestations() {

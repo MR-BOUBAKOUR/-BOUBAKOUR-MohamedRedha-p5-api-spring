@@ -16,8 +16,12 @@ import java.util.List;
 @RestController
 public class PersonRestController {
 
+    private final PersonService personService;
+
     @Autowired
-    private PersonService personService;
+    public PersonRestController(PersonService personService) {
+        this.personService = personService;
+    }
 
     @GetMapping("/person")
     public List<PersonResponseDTO> getAllPersons() {
