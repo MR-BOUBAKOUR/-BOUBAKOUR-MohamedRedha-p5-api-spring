@@ -59,6 +59,11 @@ public class DataRepository {
             // Retrieve the specified node (e.g., "persons", "firestations", etc.) from the root object using the provided node name.
             JsonNode node = rootNode.path(theNodeName);
 
+            if (node.isMissingNode() || node.isNull()) {
+                logger.warn("Node '{}' is missing or null. Returning empty list.", theNodeName);
+                return Collections.emptyList();
+            }
+
             // Create a collection type representing a "List" of the specified class type "theClass".
             // (This tells Jackson's ObjectMapper HOW to deserialize the JSON data)
             CollectionType listType = mapper.getTypeFactory()
@@ -66,7 +71,6 @@ public class DataRepository {
 
             // Deserialize the JSON node into a List of the specified type using ObjectMapper.
             // In our case : Jackson's ObjectMapper go from the "node" in the JSON file to a "List<theClass>"
-            logger.info("Deserializing the node -{}-", theNodeName);
             return mapper.readValue(node.traverse(), listType);
         } catch (IOException e) {
             logger.error("Error deserializing JSON node: -{}-", theNodeName, e);

@@ -3,9 +3,9 @@ package com.safetynet.repository;
 import com.safetynet.model.Firestation;
 import com.safetynet.model.MedicalRecord;
 import com.safetynet.model.Person;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,13 +14,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@SpringBootTest
 class DataRepositoryTest {
 
-    List<Person> persons;
-    List<Firestation> firestations;
-    List<MedicalRecord> medicalRecords;
-
-    private DataRepository dataRepository;
+    private static DataRepository dataRepository;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -35,16 +32,12 @@ class DataRepositoryTest {
         dataRepository.init();
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void init_ShouldLoadDataCorrectlyTest() {
 
-        persons = dataRepository.getPersons();
-        firestations = dataRepository.getFirestations();
-        medicalRecords = dataRepository.getMedicalRecords();
+        List<Person> persons = dataRepository.getPersons();
+        List<Firestation> firestations = dataRepository.getFirestations();
+        List<MedicalRecord> medicalRecords = dataRepository.getMedicalRecords();
 
         assertNotNull(persons, "persons is not null");
         assertNotNull(firestations, "firestations is not null");
@@ -62,34 +55,54 @@ class DataRepositoryTest {
     }
 
     @Test
-    void readData_ShouldReadDataCorrectlyTest() {
+    void readData_ShouldReturnEmptyList_WhenNodeDoesNotExist() {
+        String nonExistentNode = "nonExistentNode";
 
-        List<Person> result = dataRepository.readData("persons", Person.class);
+        List<?> result = dataRepository.readData(nonExistentNode, Object.class);
 
-        assertNotNull(result);
-        assertFalse(result.isEmpty());
-        assertEquals(23, result.size());
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void readData_ShouldReadPersonsDataCorrectlyTest() {
+
+        List<Person> persons = dataRepository.readData("persons", Person.class);
+
+        assertEquals(23, persons.size());
+
+        assertNotNull(persons);
+        for (Person person : persons) {
+            assertNotNull(person.getFirstName());
+            assertNotNull(person.getLastName());
+            assertNotNull(person.getAddress());
+            assertNotNull(person.getCity());
+            assertTrue(person.getZip() > 0);
+            assertNotNull(person.getPhone());
+            assertNotNull(person.getEmail());
+        }
     }
 
     @Test
     void writeData_ShouldWriteDataCorrectlyTest() {
 
+        List<Person> persons = dataRepository.getPersons();
+        int initPersonsCount = persons.size();
+
         Person newPerson = new Person(
-                "testFirstName",
-                "testLastName",
-                "testAddress",
-                "testCity",
-                99999,
-                "999-999-9999",
-                "testEmail@email.com"
+            "testFirstName",
+            "testLastName",
+            "testAddress",
+            "testCity",
+            99999,
+            "999-999-9999",
+            "testEmail@email.com"
         );
-        dataRepository.getPersons().add(newPerson);
-        List<Person> updatedPersons = dataRepository.getPersons();
+        persons.add(newPerson);
 
-        dataRepository.writeData("persons", updatedPersons);
+        dataRepository.writeData("persons", persons);
 
-        assertTrue(dataRepository.getPersons().contains(newPerson));
-        assertEquals(24, dataRepository.getPersons().size());
+        assertTrue(persons.contains(newPerson));
+        assertEquals(initPersonsCount + 1, dataRepository.getPersons().size());
     }
 
 }

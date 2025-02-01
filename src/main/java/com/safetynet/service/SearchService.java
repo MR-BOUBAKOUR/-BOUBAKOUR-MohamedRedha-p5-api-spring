@@ -41,8 +41,6 @@ public class SearchService {
         this.personMapper = personMapper;
     }
 
-
-
     public FirestationCoverageResponseDTO getCoveredPersonsByStation(int stationNumber) {
 
         AtomicInteger adultCount = new AtomicInteger();
