@@ -1,11 +1,14 @@
 package com.safetynet.controller;
 
+import com.safetynet.dto.SuccessResponse;
 import com.safetynet.dto.medicalrecord.MedicalRecordCreateDTO;
 import com.safetynet.dto.medicalrecord.MedicalRecordResponseDTO;
 import com.safetynet.dto.medicalrecord.MedicalRecordUpdateDTO;
 import com.safetynet.service.MedicalRecordService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +17,7 @@ import java.util.List;
 public class MedicalRecordRestController {
 
     @Autowired
-    MedicalRecordService medicalRecordService;
+    private MedicalRecordService medicalRecordService;
 
     @GetMapping("/medicalRecord")
     public List<MedicalRecordResponseDTO> getAllMedicalrecords() {
@@ -27,18 +30,23 @@ public class MedicalRecordRestController {
     }
 
     @PostMapping("/medicalRecord")
-    public void addMedicalrecord(@Valid @RequestBody MedicalRecordCreateDTO theMedicalrecord) {
+    public ResponseEntity<SuccessResponse> addMedicalrecord(@Valid @RequestBody MedicalRecordCreateDTO theMedicalrecord) {
         medicalRecordService.addMedicalrecord(theMedicalrecord);
+        SuccessResponse response = new SuccessResponse(HttpStatus.CREATED.value(), "Medical record added successfully");
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping("/medicalRecord/{theFirstName}-{theLastName}")
-    public void updateMedicalrecord(@Valid @RequestBody MedicalRecordUpdateDTO theMedicalrecord, @PathVariable String theFirstName, @PathVariable String theLastName) {
+    public ResponseEntity<SuccessResponse> updateMedicalrecord(@Valid @RequestBody MedicalRecordUpdateDTO theMedicalrecord, @PathVariable String theFirstName, @PathVariable String theLastName) {
         medicalRecordService.updateMedicalrecord(theMedicalrecord, theFirstName, theLastName);
+        SuccessResponse response = new SuccessResponse(HttpStatus.OK.value(), "Medical record updated successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/medicalRecord/{theFirstName}-{theLastName}")
-    public void deleteMedicalrecord(@PathVariable String theFirstName, @PathVariable String theLastName) {
+    public ResponseEntity<SuccessResponse> deleteMedicalrecord(@PathVariable String theFirstName, @PathVariable String theLastName) {
         medicalRecordService.deleteMedicalrecord(theFirstName, theLastName);
+        SuccessResponse response = new SuccessResponse(HttpStatus.OK.value(), "Medical record deleted successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-
 }

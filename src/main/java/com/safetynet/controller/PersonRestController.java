@@ -1,21 +1,20 @@
 package com.safetynet.controller;
 
+import com.safetynet.dto.SuccessResponse;
 import com.safetynet.dto.person.PersonCreateDTO;
 import com.safetynet.dto.person.PersonResponseDTO;
 import com.safetynet.dto.person.PersonUpdateDTO;
 import com.safetynet.service.PersonService;
 import jakarta.validation.Valid;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 public class PersonRestController {
-
-    private static final Logger logger = LoggerFactory.getLogger(PersonRestController.class);
 
     @Autowired
     private PersonService personService;
@@ -31,17 +30,23 @@ public class PersonRestController {
     }
 
     @PostMapping("/person")
-    public void addPerson(@Valid @RequestBody PersonCreateDTO thePerson) {
+    public ResponseEntity<SuccessResponse> addPerson(@Valid @RequestBody PersonCreateDTO thePerson) {
         personService.addPerson(thePerson);
+        SuccessResponse response = new SuccessResponse(HttpStatus.CREATED.value(), "Person added successfully");
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PutMapping("/person/{theFirstName}-{theLastName}")
-    public void updatePerson(@Valid @RequestBody PersonUpdateDTO thePerson, @PathVariable String theFirstName, @PathVariable String theLastName) {
+    public ResponseEntity<SuccessResponse> updatePerson(@Valid @RequestBody PersonUpdateDTO thePerson, @PathVariable String theFirstName, @PathVariable String theLastName) {
         personService.updatePerson(thePerson, theFirstName, theLastName);
+        SuccessResponse response = new SuccessResponse(HttpStatus.OK.value(), "Person updated successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/person/{theFirstName}-{theLastName}")
-    public void deletePerson(@PathVariable String theFirstName, @PathVariable String theLastName) {
+    public ResponseEntity<SuccessResponse> deletePerson(@PathVariable String theFirstName, @PathVariable String theLastName) {
         personService.deletePerson(theFirstName, theLastName);
+        SuccessResponse response = new SuccessResponse(HttpStatus.OK.value(), "Person deleted successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
