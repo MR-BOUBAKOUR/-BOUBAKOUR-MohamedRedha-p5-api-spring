@@ -17,30 +17,30 @@ class SearchControllerTest {
     }
 
     @Test
-    void getCoveredPersonsByStation() {
+    void getCoveredPersonsByStation_Test() {
     }
 
     @Test
-    void getChildrenByAddress() {
+    void getChildrenByAddress_Test() {
     }
 
     @Test
-    void getPhonesByStation() {
+    void getPhonesByStation_Test() {
     }
 
     @Test
-    void getPersonsByAddressStation() {
+    void getPersonsByAddressStation_Test() {
     }
 
     @Test
-    void getPersonsByStationsWithMedicalRecord() {
+    void getPersonsByStationsWithMedicalRecord_Test() {
     }
 
     @Test
-    void getPersonByLastNameWithMedicalRecord() {
+    void getPersonByLastNameWithMedicalRecord_Test() {
     }
 
     @Test
-    void getEmailsByCity() {
+    void getEmailsByCity_Test() {
     }
 }

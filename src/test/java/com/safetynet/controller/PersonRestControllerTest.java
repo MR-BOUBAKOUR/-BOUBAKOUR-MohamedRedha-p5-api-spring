@@ -17,22 +17,22 @@ class PersonRestControllerTest {
     }
 
     @Test
-    void getAllPersons() {
+    void getAllPersons_Test() {
     }
 
     @Test
-    void getPerson() {
+    void getPerson_Test() {
     }
 
     @Test
-    void addPerson() {
+    void addPerson_Test() {
     }
 
     @Test
-    void updatePerson() {
+    void updatePerson_Test() {
     }
 
     @Test
-    void deletePerson() {
+    void deletePerson_Test() {
     }
 }

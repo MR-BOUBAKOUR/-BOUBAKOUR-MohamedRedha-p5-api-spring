@@ -17,22 +17,22 @@ class MedicalRecordRestControllerTest {
     }
 
     @Test
-    void getAllMedicalrecords() {
+    void getAllMedicalrecords_Test() {
     }
 
     @Test
-    void getMedicalrecord() {
+    void getMedicalrecord_Test() {
     }
 
     @Test
-    void addMedicalrecord() {
+    void addMedicalrecord_Test() {
     }
 
     @Test
-    void updateMedicalrecord() {
+    void updateMedicalrecord_Test() {
     }
 
     @Test
-    void deleteMedicalrecord() {
+    void deleteMedicalrecord_Test() {
     }
 }

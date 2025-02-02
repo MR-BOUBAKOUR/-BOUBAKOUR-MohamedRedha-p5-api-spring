@@ -73,7 +73,7 @@ public class MedicalRecordService {
     }
 
     public void updateMedicalrecord(MedicalRecordUpdateDTO theMedicalrecord, String theFirstName, String theLastName) {
-        boolean found = false;
+
         for (MedicalRecord medicalRecord : medicalRecords) {
             if (medicalRecord.getFirstName().equals(theFirstName) &&
                     medicalRecord.getLastName().equals(theLastName)) {
@@ -82,17 +82,22 @@ public class MedicalRecordService {
                 updatedMedicalRecord.setFirstName(theFirstName);
                 updatedMedicalRecord.setLastName(theLastName);
 
+                if (medicalRecord.equals(updatedMedicalRecord)) {
+                    logger.warn("The medicalRecord with the name {} is exactly the same as the one you are trying to update", theLastName);
+                    throw new ConflictException("The medicalRecord with this name is exactly the same as the one you are trying to update");
+                }
+
                 int index = medicalRecords.indexOf(medicalRecord);
                 medicalRecords.set(index, updatedMedicalRecord);
                 dataRepository.writeData("medicalRecords", medicalRecords);
                 logger.info("{} updated successfully", theFirstName + " " + theLastName);
-                found = true;
+
+                return;
             }
         }
-        if (!found) {
-            logger.error("MedicalRecord not found for : {} {}", theFirstName, theLastName);
-            throw new ResourceNotFoundException("Resource not found");
-        }
+
+        logger.error("MedicalRecord not found for : {} {}", theFirstName, theLastName);
+        throw new ResourceNotFoundException("Resource not found");
     }
 
     public void deleteMedicalrecord(String theFirstName, String theLastName) {

@@ -19,4 +19,6 @@ public interface PersonMapper {
 
     Person toEntityFromResponseDTO(PersonResponseDTO personResponseDTO);
 
+    PersonForFirestationCoverageResponseDTO toPersonForFirestationCoverageResponseDTO(Person person);
+
 }

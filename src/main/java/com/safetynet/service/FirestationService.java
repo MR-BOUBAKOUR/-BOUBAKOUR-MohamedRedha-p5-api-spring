@@ -91,26 +91,28 @@ public class FirestationService {
 
     public void updateFirestation(FirestationUpdateDTO theFirestation, String theAddress) {
 
-        boolean found = false;
-
         for (Firestation firestation : firestations) {
             if (firestation.getAddress().equals(theAddress)) {
 
                 Firestation updatedFirestation = firestationMapper.toEntityFromUpdateDTO(theFirestation);
                 updatedFirestation.setAddress(theAddress);
 
+                if (firestation.equals(updatedFirestation)) {
+                    logger.warn("The firestation with the address {} is exactly the same as the one you are trying to update", theAddress);
+                    throw new ConflictException("The firestation with this address is exactly the same as the one you are trying to update");
+                }
+
                 int index = firestations.indexOf(firestation);
                 firestations.set(index, updatedFirestation);
                 dataRepository.writeData("firestations", firestations);
-                logger.info("{} updated successfully", firestation.getAddress());
-                found = true;
+                logger.info("Firestation at {} updated successfully", theAddress);
+
+                return;
             }
         }
 
-        if (!found) {
-            logger.error("Firestation not found for address: {}", theAddress);
-            throw new ResourceNotFoundException("Resource not found");
-        }
+        logger.error("Firestation not found for address: {}", theAddress);
+        throw new ResourceNotFoundException("Resource not found");
     }
 
     public void deleteFirestation(String theAddress) {

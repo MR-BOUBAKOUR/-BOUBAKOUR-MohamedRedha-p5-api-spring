@@ -33,7 +33,7 @@ class DataRepositoryTest {
     }
 
     @Test
-    void init_ShouldLoadDataCorrectlyTest() {
+    void init_ShouldLoadDataCorrectly_test() {
 
         List<Person> persons = dataRepository.getPersons();
         List<Firestation> firestations = dataRepository.getFirestations();
@@ -45,7 +45,7 @@ class DataRepositoryTest {
     }
 
     @Test
-    void init_ShouldThrowException_WhenFileNotFoundTest() {
+    void init_ShouldThrowException_WhenFileNotFound_test() {
 
         DataRepository invalidRepository = new DataRepository();
         DataRepository.FILE_PATH = "src/test/resources/missing-file.json";
@@ -55,7 +55,7 @@ class DataRepositoryTest {
     }
 
     @Test
-    void readData_ShouldReturnEmptyList_WhenNodeDoesNotExist() {
+    void readData_ShouldReturnEmptyList_WhenNodeDoesNotExist_test() {
         String nonExistentNode = "nonExistentNode";
 
         List<?> result = dataRepository.readData(nonExistentNode, Object.class);
@@ -64,7 +64,7 @@ class DataRepositoryTest {
     }
 
     @Test
-    void readData_ShouldReadPersonsDataCorrectlyTest() {
+    void readData_ShouldReadPersonsDataCorrectly_test() {
 
         List<Person> persons = dataRepository.readData("persons", Person.class);
 
@@ -83,19 +83,19 @@ class DataRepositoryTest {
     }
 
     @Test
-    void writeData_ShouldWriteDataCorrectlyTest() {
+    void writeData_ShouldWriteDataCorrectly_test() {
 
         List<Person> persons = dataRepository.getPersons();
         int initPersonsCount = persons.size();
 
         Person newPerson = new Person(
-            "testFirstName",
-            "testLastName",
-            "testAddress",
-            "testCity",
-            99999,
-            "999-999-9999",
-            "testEmail@email.com"
+                "John",
+                "Doe",
+                "456 Oak Street",
+                "Springfield",
+                12345,
+                "555-123-4567",
+                "johndoe@email.com"
         );
         persons.add(newPerson);
 

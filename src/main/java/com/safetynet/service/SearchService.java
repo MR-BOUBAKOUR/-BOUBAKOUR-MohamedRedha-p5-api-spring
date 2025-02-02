@@ -4,7 +4,6 @@ import com.safetynet.dto.person.*;
 import com.safetynet.dto.search.*;
 import com.safetynet.exception.ResourceNotFoundException;
 import com.safetynet.mapper.PersonMapper;
-import com.safetynet.mapper.SearchMapper;
 import com.safetynet.model.Firestation;
 import com.safetynet.model.MedicalRecord;
 import com.safetynet.model.Person;
@@ -30,14 +29,11 @@ public class SearchService {
     List<Firestation> firestations;
     List<MedicalRecord> medicalRecords;
 
-    private final SearchMapper searchMapper;
-
-    public SearchService(DataRepository dataRepository, SearchMapper searchMapper, PersonMapper personMapper) {
+    public SearchService(DataRepository dataRepository, PersonMapper personMapper) {
         this.firestations = dataRepository.getFirestations();
         this.medicalRecords = dataRepository.getMedicalRecords();
         this.persons = dataRepository.getPersons();
 
-        this.searchMapper = searchMapper;
         this.personMapper = personMapper;
     }
 
@@ -67,7 +63,7 @@ public class SearchService {
                     childCount.incrementAndGet();
                 }
 
-                return searchMapper.toPersonForFirestationCoverageResponseDTO(person);
+                return personMapper.toPersonForFirestationCoverageResponseDTO(person);
             })
             .toList();
 

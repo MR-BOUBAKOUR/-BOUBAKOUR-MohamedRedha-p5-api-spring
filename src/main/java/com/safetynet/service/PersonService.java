@@ -72,7 +72,7 @@ public class PersonService {
     }
 
     public void updatePerson(PersonUpdateDTO thePerson, String theFirstName, String theLastName) {
-        boolean found = false;
+
         for (Person person : persons) {
             if (person.getFirstName().equals(theFirstName) &&
                     person.getLastName().equals(theLastName)) {
@@ -82,19 +82,24 @@ public class PersonService {
                 updatedPerson.setFirstName(theFirstName);
                 updatedPerson.setLastName(theLastName);
 
+                if (person.equals(updatedPerson)) {
+                    logger.warn("The person with the name {} is exactly the same as the one you are trying to update", theLastName);
+                    throw new ConflictException("The person with this name is exactly the same as the one you are trying to update");
+                }
+
                 // Replace the existing person with the updatedPerson
                 int index = persons.indexOf(person);
                 persons.set(index, updatedPerson);
 
                 dataRepository.writeData("persons", persons);
                 logger.info("{} updated successfully", person.getFirstName());
-                found = true;
+
+                return;
             }
         }
-        if (!found) {
-            logger.error("Person not found for : {} {}", theFirstName, theLastName);
-            throw new ResourceNotFoundException("Resource not found");
-        }
+
+        logger.error("Person not found for : {} {}", theFirstName, theLastName);
+        throw new ResourceNotFoundException("Resource not found");
     }
 
     public void deletePerson(String theFirstName, String theLastName) {
