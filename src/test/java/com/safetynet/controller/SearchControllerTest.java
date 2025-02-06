@@ -85,7 +85,6 @@ public class SearchControllerTest {
         mockMvc.perform(get("/fire").param("address", address))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.stations[0]").value(1));
-
     }
 
     @Test

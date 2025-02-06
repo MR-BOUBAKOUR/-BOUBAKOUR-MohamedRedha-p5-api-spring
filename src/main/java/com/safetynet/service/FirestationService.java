@@ -20,13 +20,15 @@ public class FirestationService {
     private static final Logger logger = LoggerFactory.getLogger(FirestationService.class);
 
     private final DataRepository dataRepository;
-    private final List<Firestation> firestations;
     private final FirestationMapper firestationMapper;
+
+    private final List<Firestation> firestations;
 
     public FirestationService(DataRepository dataRepository, FirestationMapper firestationMapper) {
         this.dataRepository = dataRepository;
-        this.firestations = dataRepository.getFirestations();
         this.firestationMapper = firestationMapper;
+
+        this.firestations = dataRepository.getFirestations();
     }
 
     public List<FirestationResponseDTO> findAllFirestations() {

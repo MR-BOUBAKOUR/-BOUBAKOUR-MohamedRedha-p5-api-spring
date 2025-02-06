@@ -20,13 +20,15 @@ public class MedicalRecordService {
     private static final Logger logger = LoggerFactory.getLogger(MedicalRecordService.class);
 
     private final DataRepository dataRepository;
-    private final List<MedicalRecord> medicalRecords;
     private final MedicalRecordMapper medicalRecordMapper;
+
+    private final List<MedicalRecord> medicalRecords;
 
     public MedicalRecordService(DataRepository dataRepository, MedicalRecordMapper medicalRecordMapper) {
         this.dataRepository = dataRepository;
-        this.medicalRecords = dataRepository.getMedicalRecords();
         this.medicalRecordMapper = medicalRecordMapper;
+
+        this.medicalRecords = dataRepository.getMedicalRecords();
     }
 
     public List<MedicalRecordResponseDTO> findAllMedicalRecords() {

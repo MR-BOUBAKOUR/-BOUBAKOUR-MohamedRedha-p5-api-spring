@@ -20,13 +20,15 @@ public class PersonService {
     private static final Logger logger = LoggerFactory.getLogger(PersonService.class);
 
     private final DataRepository dataRepository;
-    private final List<Person> persons;
     private final PersonMapper personMapper;
+
+    private final List<Person> persons;
 
     public PersonService(DataRepository dataRepository, PersonMapper personMapper) {
         this.dataRepository = dataRepository;
-        this.persons = dataRepository.getPersons();
         this.personMapper = personMapper;
+
+        this.persons = dataRepository.getPersons();
     }
 
     public List<PersonResponseDTO> findAllPersons() {
