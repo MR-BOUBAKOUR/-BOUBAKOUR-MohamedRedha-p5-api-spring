@@ -25,8 +25,6 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 class FirestationServiceTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(FirestationServiceTest.class);
-
     @Mock
     private DataRepository dataRepository;
 
@@ -72,6 +70,8 @@ class FirestationServiceTest {
 
         assertNotNull(result);
         assertEquals("123 Main St", result.getAddress());
+        assertEquals(1, result.getStation());
+        verify(dataRepository, times(2)).getFirestations();
     }
 
     @Test
@@ -88,6 +88,9 @@ class FirestationServiceTest {
     void addFirestation_shouldAddFirestation_test() {
 
         FirestationCreateDTO firestationCreateDTO = new FirestationCreateDTO("789 Pine St", 3);
+
+        when(firestationMapper.toEntityFromCreateDTO(firestationCreateDTO))
+                .thenReturn(new Firestation("123 Main St", 3));
 
         firestationService.addFirestation(firestationCreateDTO);
 
@@ -110,9 +113,9 @@ class FirestationServiceTest {
     void updateFirestation_shouldUpdateFirestation_test() {
 
         FirestationUpdateDTO firestationUpdateDTO = new FirestationUpdateDTO(3);
-        Firestation firestation = new Firestation("123 Main St", 1);
 
-        when(firestationMapper.toEntityFromUpdateDTO(firestationUpdateDTO)).thenReturn(new Firestation("123 Main St", 3));
+        when(firestationMapper.toEntityFromUpdateDTO(firestationUpdateDTO))
+                .thenReturn(new Firestation("123 Main St", 3));
 
         firestationService.updateFirestation(firestationUpdateDTO, "123 Main St");
 

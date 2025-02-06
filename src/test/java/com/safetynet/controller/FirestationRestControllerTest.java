@@ -37,7 +37,7 @@ class FirestationRestControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void getAllFirestations_Success_Test() throws Exception {
+    void getAllFirestations_Success_test() throws Exception {
 
         List<FirestationResponseDTO> firestations = List.of(
                 new FirestationResponseDTO("123 Main St", 1),
@@ -57,7 +57,7 @@ class FirestationRestControllerTest {
     }
 
     @Test
-    void getFirestationByAddress_Success_Test() throws Exception {
+    void getFirestationByAddress_Success_test() throws Exception {
 
         String theAddress = "123 Main St";
         FirestationResponseDTO firestation = new FirestationResponseDTO(theAddress, 1);
@@ -73,7 +73,7 @@ class FirestationRestControllerTest {
     }
 
     @Test
-    void getFirestationByAddress_ResourceNotFound_Test() throws Exception {
+    void getFirestationByAddress_ResourceNotFound_test() throws Exception {
         String theAddress = "999 Unknown St";
         String errorResponse = "Resource not found";
 
@@ -87,7 +87,7 @@ class FirestationRestControllerTest {
     }
 
     @Test
-    void addFirestation_Success_Test() throws Exception {
+    void addFirestation_Success_test() throws Exception {
 
         FirestationCreateDTO newFirestation = new FirestationCreateDTO("789 Maple St", 3);
         String successResponse = "Firestation added successfully";
@@ -104,7 +104,7 @@ class FirestationRestControllerTest {
     }
 
     @Test
-    void addFirestation_Conflict_Test() throws Exception {
+    void addFirestation_Conflict_test() throws Exception {
 
         FirestationCreateDTO existingFirestation = new FirestationCreateDTO("123 Main St", 1);
         String errorResponse = "Resource already exist";
@@ -121,7 +121,7 @@ class FirestationRestControllerTest {
     }
 
     @Test
-    void updateFirestation_Success_Test() throws Exception {
+    void updateFirestation_Success_test() throws Exception {
         String theAddress = "123 Main St";
         FirestationUpdateDTO updatedFirestation = new FirestationUpdateDTO(5);
         String successResponse = "Firestation updated successfully";
@@ -141,7 +141,7 @@ class FirestationRestControllerTest {
     }
 
     @Test
-    void updateFirestation_ResourceNotFound_Test() throws Exception {
+    void updateFirestation_ResourceNotFound_test() throws Exception {
 
         String theAddress = "999 Unknown St";
         FirestationUpdateDTO updatedFirestation = new FirestationUpdateDTO(5);
@@ -162,7 +162,7 @@ class FirestationRestControllerTest {
     }
 
     @Test
-    void updateFirestation_Conflict_Test() throws Exception {
+    void updateFirestation_Conflict_test() throws Exception {
 
         String theAddress = "123 Main St";
         FirestationUpdateDTO updatedFirestation = new FirestationUpdateDTO(5);
@@ -183,7 +183,7 @@ class FirestationRestControllerTest {
     }
 
     @Test
-    void deleteFirestation_Success_Test() throws Exception {
+    void deleteFirestation_Success_test() throws Exception {
 
         String theAddress = "123 Main St";
         String successResponse = "Firestation deleted successfully";
@@ -198,7 +198,7 @@ class FirestationRestControllerTest {
     }
 
     @Test
-    void deleteFirestation_ResourceNotFound_Test() throws Exception {
+    void deleteFirestation_ResourceNotFound_test() throws Exception {
         String theAddress = "999 Unknown St";
         String errorResponse = "Resource not found";
 

@@ -31,7 +31,7 @@ public class SearchControllerTest {
     private SearchController searchController;
 
     @Test
-    public void getCoveredPersonsByStation_Test() throws Exception {
+    public void getCoveredPersonsByStation_test() throws Exception {
 
         int stationNumber = 1;
         AtomicInteger adultCount = new AtomicInteger(5);
@@ -53,7 +53,7 @@ public class SearchControllerTest {
     }
 
     @Test
-    public void getChildrenByAddress_Test() throws Exception {
+    public void getChildrenByAddress_test() throws Exception {
         String address = "123 Main St";
         ChildAlertResponseDTO response = new ChildAlertResponseDTO(List.of());
         when(searchService.getChildrenByAddress(address)).thenReturn(response);
@@ -64,7 +64,7 @@ public class SearchControllerTest {
     }
 
     @Test
-    public void getPhonesByStation_Test() throws Exception {
+    public void getPhonesByStation_test() throws Exception {
 
         int stationNumber = 1;
         PhoneAlertResponseDTO response = new PhoneAlertResponseDTO(List.of("123-456-7890"));
@@ -76,7 +76,7 @@ public class SearchControllerTest {
     }
 
     @Test
-    public void getPersonsByAddressStation_Test() throws Exception {
+    public void getPersonsByAddressStation_test() throws Exception {
 
         String address = "123 Main St";
         FireResponseDTO response = new FireResponseDTO(List.of(1), List.of());
@@ -88,7 +88,7 @@ public class SearchControllerTest {
     }
 
     @Test
-    public void getPersonsByStationsWithMedicalRecord_Test() throws Exception {
+    public void getPersonsByStationsWithMedicalRecord_test() throws Exception {
 
         List<Integer> stationNumbers = List.of(1, 2);
         FloodStationsResponseDTO response = new FloodStationsResponseDTO(List.of());
@@ -100,7 +100,7 @@ public class SearchControllerTest {
     }
 
     @Test
-    public void getPersonByLastNameWithMedicalRecord_Test() throws Exception {
+    public void getPersonByLastNameWithMedicalRecord_test() throws Exception {
 
         PersonsInfoLastNameResponseDTO response = new PersonsInfoLastNameResponseDTO(List.of(
                 new PersonForPersonsInfoLastNameResponseDTO(
@@ -128,7 +128,7 @@ public class SearchControllerTest {
     }
 
     @Test
-    public void getEmailsByCity_Test() throws Exception {
+    public void getEmailsByCity_test() throws Exception {
 
         String city = "Springfield";
         CommunityEmailResponseDTO response = new CommunityEmailResponseDTO(List.of("test@example.com"));

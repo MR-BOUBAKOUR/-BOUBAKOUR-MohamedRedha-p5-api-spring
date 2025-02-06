@@ -35,7 +35,7 @@ class PersonRestControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void getAllPersons_Success_Test() throws Exception {
+    void getAllPersons_Success_test() throws Exception {
         List<PersonResponseDTO> persons = List.of(
             new PersonResponseDTO("John", "Doe", "123 Street", "City1", "12345"),
             new PersonResponseDTO("Jane", "Smith", "456 Avenue", "City2", "67890")
@@ -54,7 +54,7 @@ class PersonRestControllerTest {
     }
 
     @Test
-    void getPersonByFirstNameAndLastName_Success_Test() throws Exception {
+    void getPersonByFirstNameAndLastName_Success_test() throws Exception {
         String firstName = "John";
         String lastName = "Doe";
         PersonResponseDTO person = new PersonResponseDTO(
@@ -75,7 +75,7 @@ class PersonRestControllerTest {
     }
 
     @Test
-    void getPersonByFirstNameAndLastName_ResourceNotFound_Test() throws Exception {
+    void getPersonByFirstNameAndLastName_ResourceNotFound_test() throws Exception {
         String firstName = "Unknown";
         String lastName = "Person";
         String errorResponse = "Resource not found";
@@ -90,7 +90,7 @@ class PersonRestControllerTest {
     }
 
     @Test
-    void addPerson_Success_Test() throws Exception {
+    void addPerson_Success_test() throws Exception {
         PersonCreateDTO newPerson = new PersonCreateDTO(
             "John",
             "Doe",
@@ -114,7 +114,7 @@ class PersonRestControllerTest {
     }
 
     @Test
-    void addPerson_Conflict_Test() throws Exception {
+    void addPerson_Conflict_test() throws Exception {
         PersonCreateDTO existingPerson = new PersonCreateDTO(
             "John",
             "Boyd",
@@ -138,7 +138,7 @@ class PersonRestControllerTest {
     }
 
     @Test
-    void updatePerson_Success_Test() throws Exception {
+    void updatePerson_Success_test() throws Exception {
         String firstName = "John";
         String lastName = "Doe";
         PersonUpdateDTO updatedPerson = new PersonUpdateDTO(
@@ -166,7 +166,7 @@ class PersonRestControllerTest {
     }
 
     @Test
-    void updatePerson_Conflict_Test() throws Exception {
+    void updatePerson_Conflict_test() throws Exception {
         String firstName = "John";
         String lastName = "Boyd";
         PersonUpdateDTO updatedPerson = new PersonUpdateDTO(
@@ -194,7 +194,7 @@ class PersonRestControllerTest {
     }
 
     @Test
-    void updatePerson_ResourceNotFound_Test() throws Exception {
+    void updatePerson_ResourceNotFound_test() throws Exception {
         String firstName = "Unknown";
         String lastName = "Person";
         PersonUpdateDTO updatedPerson = new PersonUpdateDTO(
@@ -222,7 +222,7 @@ class PersonRestControllerTest {
     }
 
     @Test
-    void deletePerson_Success_Test() throws Exception {
+    void deletePerson_Success_test() throws Exception {
         String firstName = "John";
         String lastName = "Doe";
         String successResponse = "Person deleted successfully";
@@ -237,7 +237,7 @@ class PersonRestControllerTest {
     }
 
     @Test
-    void deletePerson_ResourceNotFound_Test() throws Exception {
+    void deletePerson_ResourceNotFound_test() throws Exception {
         String firstName = "Unknown";
         String lastName = "Person";
         String errorResponse = "Resource not found";

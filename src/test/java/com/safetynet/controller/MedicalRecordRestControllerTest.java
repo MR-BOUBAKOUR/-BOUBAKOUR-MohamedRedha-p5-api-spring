@@ -35,7 +35,7 @@ class MedicalRecordRestControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void getAllMedicalRecords_Success_Test() throws Exception {
+    void getAllMedicalRecords_Success_test() throws Exception {
         List<MedicalRecordResponseDTO> medicalRecords = List.of(
             new MedicalRecordResponseDTO(
                 "John",
@@ -64,7 +64,7 @@ class MedicalRecordRestControllerTest {
     }
 
     @Test
-    void getMedicalRecordByFirstNameAndLastName_Success_Test() throws Exception {
+    void getMedicalRecordByFirstNameAndLastName_Success_test() throws Exception {
         String firstName = "John";
         String lastName = "Doe";
         MedicalRecordResponseDTO medicalRecord = new MedicalRecordResponseDTO(
@@ -85,7 +85,7 @@ class MedicalRecordRestControllerTest {
     }
 
     @Test
-    void getMedicalRecordByFirstNameAndLastName_ResourceNotFound_Test() throws Exception {
+    void getMedicalRecordByFirstNameAndLastName_ResourceNotFound_test() throws Exception {
         String firstName = "Unknown";
         String lastName = "Person";
         String errorResponse = "Resource not found";
@@ -100,7 +100,7 @@ class MedicalRecordRestControllerTest {
     }
 
     @Test
-    void addMedicalRecord_Success_Test() throws Exception {
+    void addMedicalRecord_Success_test() throws Exception {
         MedicalRecordCreateDTO newMedicalRecord = new MedicalRecordCreateDTO(
             "John",
             "Doe",
@@ -122,7 +122,7 @@ class MedicalRecordRestControllerTest {
     }
 
     @Test
-    void addMedicalrecord_Conflict_Test() throws Exception {
+    void addMedicalrecord_Conflict_test() throws Exception {
         MedicalRecordCreateDTO existingMedicalRecord = new MedicalRecordCreateDTO(
                 "John",
                 "Boyd",
@@ -144,7 +144,7 @@ class MedicalRecordRestControllerTest {
     }
 
     @Test
-    void updateMedicalRecord_Success_Test() throws Exception {
+    void updateMedicalRecord_Success_test() throws Exception {
         String firstName = "John";
         String lastName = "Doe";
         MedicalRecordUpdateDTO updatedMedicalRecord = new MedicalRecordUpdateDTO(
@@ -170,7 +170,7 @@ class MedicalRecordRestControllerTest {
     }
 
     @Test
-    void updateMedicalRecord_Conflict_Test() throws Exception {
+    void updateMedicalRecord_Conflict_test() throws Exception {
         String firstName = "John";
         String lastName = "Boyd";
         MedicalRecordUpdateDTO updatedMedicalRecord = new MedicalRecordUpdateDTO(
@@ -196,7 +196,7 @@ class MedicalRecordRestControllerTest {
     }
 
     @Test
-    void updateMedicalRecord_ResourceNotFound_Test() throws Exception {
+    void updateMedicalRecord_ResourceNotFound_test() throws Exception {
         String firstName = "Unknown";
         String lastName = "Person";
         MedicalRecordUpdateDTO updatedMedicalRecord = new MedicalRecordUpdateDTO(
@@ -222,7 +222,7 @@ class MedicalRecordRestControllerTest {
     }
 
     @Test
-    void deleteMedicalRecord_Success_Test() throws Exception {
+    void deleteMedicalRecord_Success_test() throws Exception {
         String firstName = "John";
         String lastName = "Doe";
         String successResponse = "Medical record deleted successfully";
@@ -237,7 +237,7 @@ class MedicalRecordRestControllerTest {
     }
 
     @Test
-    void deleteMedicalRecord_ResourceNotFound_Test() throws Exception {
+    void deleteMedicalRecord_ResourceNotFound_test() throws Exception {
         String firstName = "Unknown";
         String lastName = "Person";
         String errorResponse = "Resource not found";
