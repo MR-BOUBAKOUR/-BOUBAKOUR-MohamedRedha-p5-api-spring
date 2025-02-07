@@ -9,16 +9,10 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface MedicalRecordMapper {
 
-    MedicalRecordCreateDTO toCreateDTO(MedicalRecord medicalRecord);
-
     MedicalRecord toEntityFromCreateDTO(MedicalRecordCreateDTO medicalRecordCreateDTO);
-
-    MedicalRecordUpdateDTO toUpdateDTO(MedicalRecord medicalRecord);
 
     MedicalRecord toEntityFromUpdateDTO(MedicalRecordUpdateDTO medicalRecordUpdateDTO);
 
     MedicalRecordResponseDTO toResponseDTO(MedicalRecord medicalRecord);
-
-    MedicalRecord toEntityFromResponseDTO(MedicalRecordResponseDTO medicalRecordResponseDTO);
 
 }

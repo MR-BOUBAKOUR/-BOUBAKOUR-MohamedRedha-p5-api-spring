@@ -9,16 +9,10 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface FirestationMapper {
 
-    FirestationCreateDTO toCreateDTO(Firestation firestation);
-
     Firestation toEntityFromCreateDTO(FirestationCreateDTO firestationCreateDTO);
-
-    FirestationUpdateDTO toUpdateDTO(Firestation firestation);
 
     Firestation toEntityFromUpdateDTO(FirestationUpdateDTO firestationUpdateDTO);
 
     FirestationResponseDTO toResponseDTO(Firestation firestation);
-
-    Firestation toEntityFromResponseDTO(FirestationResponseDTO firestationResponseDTO);
 
 }

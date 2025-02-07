@@ -7,17 +7,11 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface PersonMapper {
 
-    PersonCreateDTO toCreateDTO(Person person);
-
     Person toEntityFromCreateDTO(PersonCreateDTO personCreateDTO);
-
-    PersonUpdateDTO toUpdateDTO(Person person);
 
     Person toEntityFromUpdateDTO(PersonUpdateDTO personUpdateDTO);
 
     PersonResponseDTO toResponseDTO(Person person);
-
-    Person toEntityFromResponseDTO(PersonResponseDTO personResponseDTO);
 
     PersonForFirestationCoverageResponseDTO toPersonForFirestationCoverageResponseDTO(Person person);
 
