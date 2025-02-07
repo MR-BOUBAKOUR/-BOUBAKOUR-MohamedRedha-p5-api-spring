@@ -100,9 +100,29 @@
 			</plugin>
 
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<version>3.5.2</version>
+				<configuration>
+					<includes>
+						<include>**/*IT.java</include>
+					</includes>
+				</configuration>
+			</plugin>
+
+			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.12</version>
+				<configuration>
+					<excludes>
+						<exclude>**/model/*</exclude>
+						<exclude>**/config/*</exclude>
+						<exclude>**/dto/**/*</exclude>
+						<exclude>**/exception/*</exclude>
+						<exclude>**/mapper/*</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>

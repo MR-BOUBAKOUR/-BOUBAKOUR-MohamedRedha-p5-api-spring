@@ -3,12 +3,7 @@ package com.safetynet.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.dto.firestation.FirestationCreateDTO;
 import com.safetynet.dto.firestation.FirestationUpdateDTO;
-import com.safetynet.dto.person.PersonCreateDTO;
-import com.safetynet.mapper.FirestationMapper;
-import com.safetynet.mapper.PersonMapper;
-import com.safetynet.model.Firestation;
-import com.safetynet.model.MedicalRecord;
-import com.safetynet.model.Person;
+
 import com.safetynet.repository.DataRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
