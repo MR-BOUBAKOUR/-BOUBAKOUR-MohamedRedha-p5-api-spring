@@ -68,13 +68,13 @@ Unit tests verify the business logic of the services and exception handling. The
     - **Parameter**: `city` (city)
     - **Response**: List of emails for residents of the specified city.
 
-### Additional Endpoints
+### Additional Endpoints (Get, Add, Update & Delete)
 
-### `http://localhost:8080/person`
+#### `http://localhost:8080/person`
 
-### `http://localhost:8080/firestation`
+#### `http://localhost:8080/firestation`
 
-### `http://localhost:8080/medicalRecord`
+#### `http://localhost:8080/medicalRecord`
 
 ## Versions
 - JDK 21
