@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * The type Medical record service.
+ */
 @Service
 public class MedicalRecordService {
 
@@ -24,6 +27,12 @@ public class MedicalRecordService {
 
     private final List<MedicalRecord> medicalRecords;
 
+    /**
+     * Instantiates a new Medical record service.
+     *
+     * @param dataRepository      the data repository
+     * @param medicalRecordMapper the medical record mapper
+     */
     public MedicalRecordService(DataRepository dataRepository, MedicalRecordMapper medicalRecordMapper) {
         this.dataRepository = dataRepository;
         this.medicalRecordMapper = medicalRecordMapper;
@@ -31,6 +40,11 @@ public class MedicalRecordService {
         this.medicalRecords = dataRepository.getMedicalRecords();
     }
 
+    /**
+     * Find all medical records list.
+     *
+     * @return the list
+     */
     public List<MedicalRecordResponseDTO> findAllMedicalRecords() {
 
         if (medicalRecords.isEmpty()) {
@@ -44,6 +58,13 @@ public class MedicalRecordService {
                 .toList();
     }
 
+    /**
+     * Find medicalrecord by first name and last name medical record response dto.
+     *
+     * @param theFirstName the first name
+     * @param theLastName  the last name
+     * @return the medical record response dto
+     */
     public MedicalRecordResponseDTO findMedicalrecordByFirstNameAndLastName(String theFirstName, String theLastName) {
 
         for (MedicalRecord medicalRecord : medicalRecords) {
@@ -57,6 +78,11 @@ public class MedicalRecordService {
         throw new ResourceNotFoundException("Resource not found");
     }
 
+    /**
+     * Add medicalrecord.
+     *
+     * @param theMedicalrecord the the medicalrecord
+     */
     public void addMedicalrecord(MedicalRecordCreateDTO theMedicalrecord) {
 
         boolean exists = medicalRecords.stream().anyMatch(medicalRecord ->
@@ -74,6 +100,13 @@ public class MedicalRecordService {
         logger.info("{} added successfully", theMedicalrecord.getFirstName());
     }
 
+    /**
+     * Update medicalrecord.
+     *
+     * @param theMedicalrecord the medicalrecord
+     * @param theFirstName     the first name
+     * @param theLastName      the last name
+     */
     public void updateMedicalrecord(MedicalRecordUpdateDTO theMedicalrecord, String theFirstName, String theLastName) {
 
         for (MedicalRecord medicalRecord : medicalRecords) {
@@ -102,6 +135,12 @@ public class MedicalRecordService {
         throw new ResourceNotFoundException("Resource not found");
     }
 
+    /**
+     * Delete medicalrecord.
+     *
+     * @param theFirstName the first name
+     * @param theLastName  the last name
+     */
     public void deleteMedicalrecord(String theFirstName, String theLastName) {
         boolean removed = medicalRecords.removeIf(medicalRecord -> medicalRecord.getFirstName().equals(theFirstName) && medicalRecord.getLastName().equals(theLastName));
 

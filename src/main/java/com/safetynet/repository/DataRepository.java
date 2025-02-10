@@ -18,11 +18,17 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * The type Data repository.
+ */
 @Component
 public class DataRepository {
 
     private static final Logger logger = LoggerFactory.getLogger(DataRepository.class);
 
+    /**
+     * The constant FILE_PATH.
+     */
     public static String FILE_PATH = "src/main/resources/data.json";
     private final ObjectMapper mapper = new ObjectMapper();
     private JsonNode rootNode;
@@ -37,6 +43,9 @@ public class DataRepository {
 
     // Load the JSON file only once at the start of the application.
     // This ensures that the data is available in memory for all subsequent calls.
+    /**
+     * Init.
+     */
     @PostConstruct
     public void init() {
         try {
@@ -54,6 +63,14 @@ public class DataRepository {
         }
     }
 
+    /**
+     * Read data list.
+     *
+     * @param <T>         the type parameter
+     * @param theNodeName the node name
+     * @param theClass    the class
+     * @return the list
+     */
     public <T> List<T> readData(String theNodeName, Class<T> theClass) {
         try {
             // Retrieve the specified node (e.g., "persons", "firestations", etc.) from the root object using the provided node name.
@@ -78,6 +95,13 @@ public class DataRepository {
         }
     }
 
+    /**
+     * Write data.
+     *
+     * @param <T>         the type parameter
+     * @param theNodeName the node name
+     * @param data        the data
+     */
     public <T> void writeData(String theNodeName, List<T> data) {
         try {
             // Create a deep copy of the rootNode to preserve the original structure.

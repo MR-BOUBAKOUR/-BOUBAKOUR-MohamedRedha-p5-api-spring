@@ -12,11 +12,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
+/**
+ * The type Global exception handler.
+ */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
+    /**
+     * Handle resource not found exception response entity.
+     *
+     * @param ex the ex (the exception)
+     * @return the response entity
+     */
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
 
@@ -28,6 +37,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Handle conflict exception response entity.
+     *
+     * @param ex the ex (the exception)
+     * @return the response entity
+     */
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<ErrorResponse> handleConflictException(ConflictException ex) {
 
@@ -39,6 +54,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
+    /**
+     * Handle general exception response entity.
+     *
+     * @param ex the ex (the exception)
+     * @return the response entity
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(Exception ex) {
 
@@ -50,6 +71,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Handle validation exception response entity.
+     *
+     * @param ex the ex (the exception)
+     * @return the response entity
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
 
@@ -69,6 +96,12 @@ public class GlobalExceptionHandler {
                 .body(errorResponse);
     }
 
+    /**
+     * Handle illegal argument exception response entity.
+     *
+     * @param ex the ex (the exception)
+     * @return the response entity
+     */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
         ErrorResponse errorResponse = new ErrorResponse(

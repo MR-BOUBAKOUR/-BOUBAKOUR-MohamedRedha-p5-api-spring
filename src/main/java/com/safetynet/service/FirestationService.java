@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * The type Firestation service.
+ */
 @Service
 public class FirestationService {
 
@@ -24,6 +27,12 @@ public class FirestationService {
 
     private final List<Firestation> firestations;
 
+    /**
+     * Instantiates a new Firestation service.
+     *
+     * @param dataRepository    the data repository
+     * @param firestationMapper the firestation mapper
+     */
     public FirestationService(DataRepository dataRepository, FirestationMapper firestationMapper) {
         this.dataRepository = dataRepository;
         this.firestationMapper = firestationMapper;
@@ -31,6 +40,11 @@ public class FirestationService {
         this.firestations = dataRepository.getFirestations();
     }
 
+    /**
+     * Find all firestations list.
+     *
+     * @return the list
+     */
     public List<FirestationResponseDTO> findAllFirestations() {
 
         if (firestations.isEmpty()) {
@@ -44,6 +58,12 @@ public class FirestationService {
                 .toList();
     }
 
+    /**
+     * Find firestation by address firestation response dto.
+     *
+     * @param theAddress the address
+     * @return the firestation response dto
+     */
     public FirestationResponseDTO findFirestationByAddress(String theAddress) {
 
         for (Firestation firestation : firestations) {
@@ -75,6 +95,11 @@ public class FirestationService {
 
     */
 
+    /**
+     * Add firestation.
+     *
+     * @param theFirestation the firestation
+     */
     public void addFirestation(FirestationCreateDTO theFirestation) {
 
         boolean exists = firestations.stream()
@@ -91,6 +116,12 @@ public class FirestationService {
         logger.info("{} added successfully", theFirestation.getAddress());
     }
 
+    /**
+     * Update firestation.
+     *
+     * @param theFirestation the firestation
+     * @param theAddress     the address
+     */
     public void updateFirestation(FirestationUpdateDTO theFirestation, String theAddress) {
 
         for (Firestation firestation : firestations) {
@@ -117,6 +148,11 @@ public class FirestationService {
         throw new ResourceNotFoundException("Resource not found");
     }
 
+    /**
+     * Delete firestation.
+     *
+     * @param theAddress the address
+     */
     public void deleteFirestation(String theAddress) {
 
         boolean removed = firestations.removeIf(firestation -> firestation.getAddress().equals(theAddress));

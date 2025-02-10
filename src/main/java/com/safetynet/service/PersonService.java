@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * The type Person service.
+ */
 @Service
 public class PersonService {
 
@@ -24,13 +27,23 @@ public class PersonService {
 
     private final List<Person> persons;
 
+    /**
+     * Instantiates a new Person service.
+     *
+     * @param dataRepository the data repository
+     * @param personMapper   the person mapper
+     */
     public PersonService(DataRepository dataRepository, PersonMapper personMapper) {
         this.dataRepository = dataRepository;
         this.personMapper = personMapper;
-
         this.persons = dataRepository.getPersons();
     }
 
+    /**
+     * Find all persons list.
+     *
+     * @return the list
+     */
     public List<PersonResponseDTO> findAllPersons() {
 
         if (persons.isEmpty()) {
@@ -44,6 +57,13 @@ public class PersonService {
                 .toList();
     }
 
+    /**
+     * Find person by first name and last name person response dto.
+     *
+     * @param theFirstName the first name
+     * @param theLastName  the last name
+     * @return the person response dto
+     */
     public PersonResponseDTO findPersonByFirstNameAndLastName(String theFirstName, String theLastName) {
         for (Person person : persons) {
             if (person.getFirstName().equals(theFirstName) && person.getLastName().equals(theLastName)) {
@@ -56,6 +76,11 @@ public class PersonService {
         throw new ResourceNotFoundException("Resource not found");
     }
 
+    /**
+     * Add person.
+     *
+     * @param thePerson the the person
+     */
     public void addPerson(PersonCreateDTO thePerson) {
 
         boolean exists = persons.stream().anyMatch(persons ->
@@ -73,6 +98,13 @@ public class PersonService {
         logger.info("{} added successfully", person.getFirstName());
     }
 
+    /**
+     * Update person.
+     *
+     * @param thePerson    the person
+     * @param theFirstName the first name
+     * @param theLastName  the last name
+     */
     public void updatePerson(PersonUpdateDTO thePerson, String theFirstName, String theLastName) {
 
         for (Person person : persons) {
@@ -104,6 +136,12 @@ public class PersonService {
         throw new ResourceNotFoundException("Resource not found");
     }
 
+    /**
+     * Delete person.
+     *
+     * @param theFirstName the first name
+     * @param theLastName  the last name
+     */
     public void deletePerson(String theFirstName, String theLastName) {
         // Not using the "persons.remove(person)" to avoid ConcurrentModificationException.
         // Occurs when a collection is modified while it is being iterated over.

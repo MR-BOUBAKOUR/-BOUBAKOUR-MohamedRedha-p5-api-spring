@@ -19,16 +19,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * The type Search service.
+ */
 @Service
 public class SearchService {
 
     private static final Logger logger = LoggerFactory.getLogger(SearchService.class);
     private final PersonMapper personMapper;
 
+    /**
+     * The Persons.
+     */
     List<Person> persons;
+    /**
+     * The Firestations.
+     */
     List<Firestation> firestations;
+    /**
+     * The Medical records.
+     */
     List<MedicalRecord> medicalRecords;
 
+    /**
+     * Instantiates a new Search service.
+     *
+     * @param dataRepository the data repository
+     * @param personMapper   the person mapper
+     */
     public SearchService(DataRepository dataRepository, PersonMapper personMapper) {
         this.firestations = dataRepository.getFirestations();
         this.medicalRecords = dataRepository.getMedicalRecords();
@@ -37,6 +55,12 @@ public class SearchService {
         this.personMapper = personMapper;
     }
 
+    /**
+     * Gets covered persons by station.
+     *
+     * @param stationNumber the station number
+     * @return the covered persons by station
+     */
     public FirestationCoverageResponseDTO getCoveredPersonsByStation(int stationNumber) {
 
         AtomicInteger adultCount = new AtomicInteger();
@@ -74,6 +98,12 @@ public class SearchService {
         );
     }
 
+    /**
+     * Gets children by address.
+     *
+     * @param address the address
+     * @return the children by address
+     */
     public ChildAlertResponseDTO getChildrenByAddress(String address) {
 
         List<Person> residents = persons.stream()
@@ -106,6 +136,12 @@ public class SearchService {
         return new ChildAlertResponseDTO(children);
     }
 
+    /**
+     * Gets phones by station.
+     *
+     * @param stationNumber the station number
+     * @return the phones by station
+     */
     public PhoneAlertResponseDTO getPhonesByStation(int stationNumber) {
 
         List<Firestation> firestationsWithSameNumberStation = firestations.stream()
@@ -127,6 +163,12 @@ public class SearchService {
         return new PhoneAlertResponseDTO(phones);
     }
 
+    /**
+     * Gets persons by address station.
+     *
+     * @param address the address
+     * @return the persons by address station
+     */
     public FireResponseDTO getPersonsByAddressStation(String address) {
 
         List<Integer> stations = firestations.stream()
@@ -164,6 +206,12 @@ public class SearchService {
         );
     }
 
+    /**
+     * Gets persons by stations with medical record.
+     *
+     * @param stationNumbers the station numbers
+     * @return the persons by stations with medical record
+     */
     public FloodStationsResponseDTO getPersonsByStationsWithMedicalRecord(List<Integer> stationNumbers) {
 
         List<String> firestationsByAddress = new ArrayList<>();
@@ -203,6 +251,12 @@ public class SearchService {
         return new FloodStationsResponseDTO(persons);
     }
 
+    /**
+     * Gets person by last name with medical record.
+     *
+     * @param lastName the last name
+     * @return the person by last name with medical record
+     */
     public PersonsInfoLastNameResponseDTO getPersonByLastNameWithMedicalRecord(String lastName) {
 
         List<PersonForPersonsInfoLastNameResponseDTO> personsTargeted = persons.stream()
@@ -225,6 +279,12 @@ public class SearchService {
         return new PersonsInfoLastNameResponseDTO(personsTargeted);
     }
 
+    /**
+     * Gets emails by city.
+     *
+     * @param city the city
+     * @return the emails by city
+     */
     public CommunityEmailResponseDTO getEmailsByCity(String city) {
 
         List<String> emails = persons.stream()
@@ -252,16 +312,34 @@ public class SearchService {
             });
     }
 
+    /**
+     * Gets medications.
+     *
+     * @param person the person
+     * @return the medications
+     */
     public List<String> getMedications(Person person) {
         MedicalRecord record = getMedicalRecord(person);
         return record.getMedications();
     }
 
+    /**
+     * Gets allergies.
+     *
+     * @param person the person
+     * @return the allergies
+     */
     public List<String> getAllergies(Person person) {
         MedicalRecord record = getMedicalRecord(person);
         return record.getAllergies();
     }
 
+    /**
+     * Gets age.
+     *
+     * @param person the person
+     * @return the age
+     */
     public int getAge(Person person) {
         MedicalRecord record = getMedicalRecord(person);
         LocalDate dateOfBirth = LocalDate.parse(record.getBirthdate(), DateTimeFormatter.ofPattern("MM/dd/yyyy"));
